@@ -10,7 +10,7 @@ using PayGate.Webhooks;
 /// Configures PayGate. Returned by <see cref="PayGateServiceCollectionExtensions.AddPayGate"/>; provider packages add their own
 /// extension methods to it, such as <c>AddKashier(...)</c>.
 /// </summary>
-public sealed class PayGateBuilder
+public sealed partial class PayGateBuilder
 {
     internal PayGateBuilder(IServiceCollection services)
     {
