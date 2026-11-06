@@ -3,6 +3,9 @@ const PayGate.PayGateTelemetry.ActivitySourceName = "PayGate" -> string!
 const PayGate.PayGateTelemetry.MeterName = "PayGate" -> string!
 const PayGate.Providers.PaymentHttp.IdempotencyKeyHeader = "Idempotency-Key" -> string!
 Microsoft.Extensions.DependencyInjection.PayGateServiceCollectionExtensions
+override PayGate.Webhooks.WebhookAck.Equals(object? obj) -> bool
+override PayGate.Webhooks.WebhookAck.GetHashCode() -> int
+override PayGate.Webhooks.WebhookAck.ToString() -> string!
 override sealed PayGate.PaymentAccountOptions.ToString() -> string!
 PayGate.IPaymentCredentialsProvider<TOptions>
 PayGate.IPaymentCredentialsProvider<TOptions>.GetCredentialsAsync(PayGate.PaymentAccount account, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask<TOptions!>
@@ -11,8 +14,11 @@ PayGate.PayGateBuilder.AddAccountOptions<TOptions>(PayGate.PaymentAccount accoun
 PayGate.PayGateBuilder.AddEventHandler<THandler>() -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.AddGateway(PayGate.PaymentAccount account, System.Func<System.IServiceProvider!, PayGate.IPaymentGateway!>! factory) -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.AddProviderHttpClient(PayGate.PaymentAccount account, System.Action<System.IServiceProvider!, System.Net.Http.HttpClient!>? configureClient = null) -> Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!
+PayGate.PayGateBuilder.AddWebhookAckPolicy<TPolicy>() -> PayGate.PayGateBuilder!
+PayGate.PayGateBuilder.AddWebhookVerifier<TVerifier>() -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.ConfigureHttpClient(PayGate.PaymentAccount account, System.Action<Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!>! configure) -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.ConfigureHttpOptions(PayGate.PaymentAccount account, System.Action<PayGate.Providers.PaymentHttpOptions!>! configure) -> PayGate.PayGateBuilder!
+PayGate.PayGateBuilder.ConfigureWebhooks(PayGate.PaymentAccount account, System.Action<PayGate.Webhooks.WebhookOptions!>! configure) -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.Services.get -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
 PayGate.PayGateTelemetry
 PayGate.PaymentAccountOptions
@@ -39,6 +45,37 @@ PayGate.Providers.PaymentHttpOptions.WriteAttemptTimeout.get -> System.TimeSpan
 PayGate.Providers.PaymentHttpOptions.WriteAttemptTimeout.set -> void
 PayGate.Providers.Signatures
 PayGate.Providers.WireFormat
+PayGate.Webhooks.IWebhookProcessor
+PayGate.Webhooks.IWebhookProcessor.ProcessAsync(PayGate.Webhooks.WebhookRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<PayGate.Webhooks.WebhookProcessingResult!>!
+PayGate.Webhooks.WebhookAck
+PayGate.Webhooks.WebhookAck.<Clone>$() -> PayGate.Webhooks.WebhookAck!
+PayGate.Webhooks.WebhookAck.Body.get -> string?
+PayGate.Webhooks.WebhookAck.Body.init -> void
+PayGate.Webhooks.WebhookAck.Deconstruct(out int StatusCode, out string? Body) -> void
+PayGate.Webhooks.WebhookAck.Equals(PayGate.Webhooks.WebhookAck? other) -> bool
+PayGate.Webhooks.WebhookAck.StatusCode.get -> int
+PayGate.Webhooks.WebhookAck.StatusCode.init -> void
+PayGate.Webhooks.WebhookAck.WebhookAck(int StatusCode, string? Body = null) -> void
+PayGate.Webhooks.WebhookAckPolicy
+PayGate.Webhooks.WebhookAckPolicy.Provider.get -> PayGate.PaymentProviderId
+PayGate.Webhooks.WebhookAckPolicy.WebhookAckPolicy(PayGate.PaymentProviderId provider) -> void
+PayGate.Webhooks.WebhookOptions
+PayGate.Webhooks.WebhookOptions.ConfirmWithProvider.get -> bool
+PayGate.Webhooks.WebhookOptions.ConfirmWithProvider.set -> void
+PayGate.Webhooks.WebhookOptions.WebhookOptions() -> void
+PayGate.Webhooks.WebhookProcessingResult
+PayGate.Webhooks.WebhookProcessingResult.Ack.get -> PayGate.Webhooks.WebhookAck!
+PayGate.Webhooks.WebhookProcessingResult.EventIds.get -> System.Collections.Generic.IReadOnlyList<string!>!
+PayGate.Webhooks.WebhookProcessingResult.Reason.get -> string?
+PayGate.Webhooks.WebhookProcessingResult.Status.get -> PayGate.Webhooks.WebhookProcessingStatus
+PayGate.Webhooks.WebhookProcessingStatus
+PayGate.Webhooks.WebhookProcessingStatus.AlreadyProcessed = 2 -> PayGate.Webhooks.WebhookProcessingStatus
+PayGate.Webhooks.WebhookProcessingStatus.Failed = 0 -> PayGate.Webhooks.WebhookProcessingStatus
+PayGate.Webhooks.WebhookProcessingStatus.Ignored = 3 -> PayGate.Webhooks.WebhookProcessingStatus
+PayGate.Webhooks.WebhookProcessingStatus.InvalidSignature = 4 -> PayGate.Webhooks.WebhookProcessingStatus
+PayGate.Webhooks.WebhookProcessingStatus.Malformed = 5 -> PayGate.Webhooks.WebhookProcessingStatus
+PayGate.Webhooks.WebhookProcessingStatus.Processed = 1 -> PayGate.Webhooks.WebhookProcessingStatus
+PayGate.Webhooks.WebhookProcessingStatus.UnknownAccount = 6 -> PayGate.Webhooks.WebhookProcessingStatus
 static Microsoft.Extensions.DependencyInjection.PayGateServiceCollectionExtensions.AddPayGate(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services) -> PayGate.PayGateBuilder!
 static PayGate.PaymentAccountOptions.Redact(string? secret) -> string!
 static PayGate.Providers.PaymentHttp.ClientName(PayGate.PaymentAccount account) -> string!
@@ -59,4 +96,7 @@ static PayGate.Providers.WireFormat.ToDecimalString(decimal amount, int decimalP
 static PayGate.Providers.WireFormat.ToDecimalString(PayGate.Money money) -> string!
 static PayGate.Providers.WireFormat.ToMinorUnitsString(PayGate.Money money) -> string!
 static PayGate.Providers.WireFormat.TryGetRawProperty(System.Text.Json.JsonElement element, string! propertyName, out string? value) -> bool
+static PayGate.Webhooks.WebhookAck.operator !=(PayGate.Webhooks.WebhookAck? left, PayGate.Webhooks.WebhookAck? right) -> bool
+static PayGate.Webhooks.WebhookAck.operator ==(PayGate.Webhooks.WebhookAck? left, PayGate.Webhooks.WebhookAck? right) -> bool
 virtual PayGate.PaymentAccountOptions.AppendMembers(System.Text.StringBuilder! builder) -> void
+virtual PayGate.Webhooks.WebhookAckPolicy.GetAck(PayGate.Webhooks.WebhookProcessingStatus status) -> PayGate.Webhooks.WebhookAck!
