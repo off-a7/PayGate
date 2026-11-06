@@ -11,7 +11,7 @@ permissions:
 env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  FEED_URL: https://nuget.pkg.github.com/hishamabdalla/index.json
+  FEED_URL: https://nuget.pkg.github.com/off-a7/index.json
 
 jobs:
   publish:
