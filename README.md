@@ -6,7 +6,7 @@ PayGate is a library, not a service:
 - **Your application keeps ownership** of its database, payment records, orders, invoices, subscriptions, credentials and business rules.
 - There is no central payment database and nothing extra to run.
 
-> **Status: pre-release.** `PayGate.Abstractions` has its contracts and models, which may still change before 1.0. The other packages have no API yet.
+> **Status: pre-release.** `PayGate.Abstractions`, `PayGate` and `PayGate.Testing` have their first API, which may still change before 1.0. `PayGate.AspNetCore` and `PayGate.Kashier` have no API yet.
 
 ## Packages
 
