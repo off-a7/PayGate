@@ -3,6 +3,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using PayGate.Webhooks;
 
@@ -60,8 +62,14 @@ public sealed partial class PayGateBuilder
             }
         }
 
-        Services.AddSingleton(new GatewayRegistration(account, factory));
-        Services.AddKeyedTransient<IPaymentGateway>(account.ToString(), (provider, _) => factory(provider));
+        IPaymentGateway Create(IServiceProvider provider) => new InstrumentedPaymentGateway(
+            account,
+            factory(provider),
+            provider.GetRequiredService<TimeProvider>(),
+            provider.GetService<ILogger<InstrumentedPaymentGateway>>() ?? NullLogger<InstrumentedPaymentGateway>.Instance);
+
+        Services.AddSingleton(new GatewayRegistration(account, Create));
+        Services.AddKeyedTransient<IPaymentGateway>(account.ToString(), (provider, _) => Create(provider));
         return this;
     }
 

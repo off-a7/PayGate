@@ -1,4 +1,6 @@
 #nullable enable
+const PayGate.PayGateTelemetry.ActivitySourceName = "PayGate" -> string!
+const PayGate.PayGateTelemetry.MeterName = "PayGate" -> string!
 const PayGate.Providers.PaymentHttp.IdempotencyKeyHeader = "Idempotency-Key" -> string!
 Microsoft.Extensions.DependencyInjection.PayGateServiceCollectionExtensions
 override sealed PayGate.PaymentAccountOptions.ToString() -> string!
@@ -12,6 +14,7 @@ PayGate.PayGateBuilder.AddProviderHttpClient(PayGate.PaymentAccount account, Sys
 PayGate.PayGateBuilder.ConfigureHttpClient(PayGate.PaymentAccount account, System.Action<Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!>! configure) -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.ConfigureHttpOptions(PayGate.PaymentAccount account, System.Action<PayGate.Providers.PaymentHttpOptions!>! configure) -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.Services.get -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+PayGate.PayGateTelemetry
 PayGate.PaymentAccountOptions
 PayGate.PaymentAccountOptions.BaseUrlOverride.get -> System.Uri?
 PayGate.PaymentAccountOptions.BaseUrlOverride.set -> void
