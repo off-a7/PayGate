@@ -1,1 +1,14 @@
 #nullable enable
+const Microsoft.AspNetCore.Builder.PayGateEndpointRouteBuilderExtensions.DefaultPrefix = "/webhooks" -> string!
+const PayGate.AspNetCore.PayGateWebhookEndpointOptions.DefaultMaxBodyBytes = 262144 -> int
+Microsoft.AspNetCore.Builder.PayGateEndpointRouteBuilderExtensions
+PayGate.AspNetCore.IPayGateWebhookEndpoint
+PayGate.AspNetCore.IPayGateWebhookEndpoint.HandleAsync(Microsoft.AspNetCore.Http.HttpContext! context, PayGate.PaymentAccount account, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.AspNetCore.Http.IResult!>!
+PayGate.AspNetCore.IPayGateWebhookEndpoint.HandleAsync(Microsoft.AspNetCore.Http.HttpContext! context, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.AspNetCore.Http.IResult!>!
+PayGate.AspNetCore.PayGateBuilderAspNetCoreExtensions
+PayGate.AspNetCore.PayGateWebhookEndpointOptions
+PayGate.AspNetCore.PayGateWebhookEndpointOptions.MaxBodyBytes.get -> int
+PayGate.AspNetCore.PayGateWebhookEndpointOptions.MaxBodyBytes.set -> void
+PayGate.AspNetCore.PayGateWebhookEndpointOptions.PayGateWebhookEndpointOptions() -> void
+static Microsoft.AspNetCore.Builder.PayGateEndpointRouteBuilderExtensions.MapPayGateWebhooks(this Microsoft.AspNetCore.Routing.IEndpointRouteBuilder! endpoints, string! prefix = "/webhooks") -> Microsoft.AspNetCore.Routing.RouteGroupBuilder!
+static PayGate.AspNetCore.PayGateBuilderAspNetCoreExtensions.AddWebhookEndpoints(this PayGate.PayGateBuilder! builder, System.Action<PayGate.AspNetCore.PayGateWebhookEndpointOptions!>? configure = null) -> PayGate.PayGateBuilder!
