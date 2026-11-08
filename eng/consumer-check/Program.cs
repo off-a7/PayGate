@@ -1,6 +1,7 @@
 ﻿// Grows with the public API: each phase adds calls here so the packages are exercised under
 // strict consumer settings, not just referenced.
 using PayGate;
+using PayGate.AspNetCore;
 using PayGate.Providers;
 using PayGate.Testing;
 using PayGate.Webhooks;
@@ -8,10 +9,12 @@ using PayGate.Webhooks;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddPayGate()
     .AddEventHandler<ConsumerEventHandler>()
+    .AddWebhookEndpoints(options => options.MaxBodyBytes = 128 * 1024)
     .AddPayGateFake(options => options.Flow = FakeFlow.DisplayReference)
     .ConfigureWebhooks(new PaymentAccount(FakePaymentGateway.ProviderId), options => options.ConfirmWithProvider = true);
 
 var app = builder.Build();
+app.MapPayGateWebhooks().AllowAnonymous();
 
 app.MapGet("/", (IPaymentGatewayResolver resolver) =>
 {
