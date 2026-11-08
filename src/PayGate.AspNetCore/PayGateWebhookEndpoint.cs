@@ -4,7 +4,6 @@ using System.Buffers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 using PayGate.Webhooks;
 
 /// <summary>The default <see cref="IPayGateWebhookEndpoint"/>.</summary>
@@ -31,7 +30,7 @@ internal sealed class PayGateWebhookEndpoint(
         ArgumentNullException.ThrowIfNull(context);
 
         var request = context.Request;
-        byte[]? body = await ReadBodyAsync(request, options.Value.MaxBodyBytes, cancellationToken).ConfigureAwait(false);
+        byte[]? body = await ReadBodyAsync(request, options.Value.MaxBodyBytesFor(account.Provider), cancellationToken).ConfigureAwait(false);
         if (body is null)
         {
             return Results.StatusCode(StatusCodes.Status413PayloadTooLarge);
@@ -41,8 +40,8 @@ internal sealed class PayGateWebhookEndpoint(
         {
             Account = account,
             Method = request.Method,
-            Headers = Copy(request.Headers),
-            Query = Copy(request.Query),
+            Headers = RequestValues.Copy(request.Headers),
+            Query = RequestValues.Copy(request.Query),
             Body = body,
             ReceivedAt = timeProvider.GetUtcNow(),
         };
@@ -104,16 +103,5 @@ internal sealed class PayGateWebhookEndpoint(
         }
 
         return buffer.ToArray();
-    }
-
-    private static Dictionary<string, IReadOnlyList<string>> Copy(IEnumerable<KeyValuePair<string, StringValues>> values)
-    {
-        var copy = new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase);
-        foreach (var (key, value) in values)
-        {
-            copy[key] = [.. value.OfType<string>()];
-        }
-
-        return copy;
     }
 }
