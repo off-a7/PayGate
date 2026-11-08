@@ -21,6 +21,19 @@ public sealed partial class PayGateBuilder
     }
 
     /// <summary>
+    /// Registers a provider's return-callback parser, for provider packages. Parsers are singletons, one per provider.
+    /// Registering the same type again, as a package does for each account, has no effect.
+    /// </summary>
+    /// <typeparam name="TParser">The provider's parser.</typeparam>
+    /// <returns>This builder.</returns>
+    public PayGateBuilder AddReturnParser<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TParser>()
+        where TParser : class, IPaymentReturnParser
+    {
+        Services.TryAddEnumerable(ServiceDescriptor.Singleton<IPaymentReturnParser, TParser>());
+        return this;
+    }
+
+    /// <summary>
     /// Registers a provider's ack policy, for provider packages whose provider expects something other than the default
     /// <see cref="WebhookAckPolicy"/>. Registering the same type again has no effect.
     /// </summary>

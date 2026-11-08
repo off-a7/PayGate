@@ -1,1 +1,2 @@
 #nullable enable
+PayGate.PayGateBuilder.AddReturnParser<TParser>() -> PayGate.PayGateBuilder!
