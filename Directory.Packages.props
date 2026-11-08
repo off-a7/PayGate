@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <!-- Core: dependency injection and named, validated options per account -->
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.14" />
     <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.13" />
     <!-- Core: provider HTTP clients with payment-safe resilience and redacted logging -->
     <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.13" />
@@ -42,7 +42,7 @@
     <PackageVersion Include="Shouldly" Version="4.3.0" />
     <PackageVersion Include="NSubstitute" Version="6.2.0" />
     <!-- The concrete container, used by tests to build service providers -->
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
     <!-- In-memory ASP.NET Core server for endpoint tests -->
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.13" />
   </ItemGroup>
