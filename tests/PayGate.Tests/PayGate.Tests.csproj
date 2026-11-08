@@ -4,6 +4,7 @@
     <ProjectReference Include="..\..\src\PayGate.Abstractions\PayGate.Abstractions.csproj" />
     <ProjectReference Include="..\..\src\PayGate\PayGate.csproj" />
     <ProjectReference Include="..\..\src\PayGate.Testing\PayGate.Testing.csproj" />
+    <ProjectReference Include="..\PayGate.Conformance\PayGate.Conformance.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,7 +1,9 @@
 # Contributing to PayGate
 
 ## Prerequisites
-- .NET SDK as pinned in [`global.json`](global.json) (10.0.x).
+- .NET SDK exactly as pinned in [`global.json`](global.json). The SDK decides the version of the implicit
+  `Microsoft.NET.ILLink.Tasks` package that the lock files record, so CI and every machine must use the same one.
+  To upgrade: change `global.json`, run `dotnet restore --force-evaluate`, and commit both.
 - PowerShell (Windows PowerShell 5.1 or PowerShell 7) for the scripts in `eng/`.
 
 ## Branching

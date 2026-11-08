@@ -36,9 +36,9 @@
     <Company>PayGate</Company>
     <Product>PayGate</Product>
     <Copyright>Copyright (c) PayGate contributors. All rights reserved.</Copyright>
-    <RepositoryUrl>https://github.com/hishamabdalla/PayGate</RepositoryUrl>
+    <RepositoryUrl>https://github.com/off-a7/PayGate</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/hishamabdalla/PayGate</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/off-a7/PayGate</PackageProjectUrl>
     <PackageTags>payments;payment-gateway;kashier;paymob;fawry;stripe;webhooks</PackageTags>
   </PropertyGroup>
 

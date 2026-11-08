@@ -6,7 +6,7 @@ PayGate is a library, not a service:
 - **Your application keeps ownership** of its database, payment records, orders, invoices, subscriptions, credentials and business rules.
 - There is no central payment database and nothing extra to run.
 
-> **Status: pre-release.** `PayGate.Abstractions` has its contracts and models, which may still change before 1.0. The other packages have no API yet.
+> **Status: pre-release.** `PayGate.Abstractions`, `PayGate` and `PayGate.Testing` have their first API, which may still change before 1.0. `PayGate.AspNetCore` and `PayGate.Kashier` have no API yet.
 
 ## Packages
 
@@ -24,13 +24,13 @@ Requirements: **.NET 10** (`net10.0`).
 
 ## Installing from the private feed
 
-Packages are published to GitHub Packages under `hishamabdalla`. Add the feed **with package source mapping** to the consuming application's `NuGet.Config`:
+Packages are published to GitHub Packages under `off-a7`. Add the feed **with package source mapping** to the consuming application's `NuGet.Config`:
 
 ```xml
 <configuration>
   <packageSources>
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" protocolVersion="3" />
-    <add key="paygate" value="https://nuget.pkg.github.com/hishamabdalla/index.json" />
+    <add key="paygate" value="https://nuget.pkg.github.com/off-a7/index.json" />
   </packageSources>
   <packageSourceMapping>
     <packageSource key="nuget.org">

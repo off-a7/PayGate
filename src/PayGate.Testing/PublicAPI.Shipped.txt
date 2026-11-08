@@ -1,1 +1,56 @@
 #nullable enable
+const PayGate.Testing.FakeGatewayOptions.DefaultWebhookSecret = "fake-webhook-secret" -> string!
+const PayGate.Testing.FakeWebhookBuilder.SignatureHeader = "X-Fake-Signature" -> string!
+override PayGate.Testing.FakeWriteAttempt.Equals(object? obj) -> bool
+override PayGate.Testing.FakeWriteAttempt.GetHashCode() -> int
+override PayGate.Testing.FakeWriteAttempt.ToString() -> string!
+PayGate.Testing.FakeFlow
+PayGate.Testing.FakeFlow.ClientSdk = 1 -> PayGate.Testing.FakeFlow
+PayGate.Testing.FakeFlow.DisplayReference = 2 -> PayGate.Testing.FakeFlow
+PayGate.Testing.FakeFlow.Redirect = 0 -> PayGate.Testing.FakeFlow
+PayGate.Testing.FakeGatewayOptions
+PayGate.Testing.FakeGatewayOptions.AllowInProduction.get -> bool
+PayGate.Testing.FakeGatewayOptions.AllowInProduction.set -> void
+PayGate.Testing.FakeGatewayOptions.FakeGatewayOptions() -> void
+PayGate.Testing.FakeGatewayOptions.Flow.get -> PayGate.Testing.FakeFlow
+PayGate.Testing.FakeGatewayOptions.Flow.set -> void
+PayGate.Testing.FakeGatewayOptions.IdempotentWrites.get -> bool
+PayGate.Testing.FakeGatewayOptions.IdempotentWrites.set -> void
+PayGate.Testing.FakeGatewayOptions.LookupByMerchantReference.get -> bool
+PayGate.Testing.FakeGatewayOptions.LookupByMerchantReference.set -> void
+PayGate.Testing.FakeGatewayOptions.WebhookSecret.get -> string!
+PayGate.Testing.FakeGatewayOptions.WebhookSecret.set -> void
+PayGate.Testing.FakePaymentGateway
+PayGate.Testing.FakePaymentGateway.Account.get -> PayGate.PaymentAccount
+PayGate.Testing.FakePaymentGateway.CancelAsync(PayGate.PaymentCancelRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<PayGate.PaymentResult<PayGate.PaymentCancelResult!>!>!
+PayGate.Testing.FakePaymentGateway.Capabilities.get -> PayGate.PaymentCapabilities!
+PayGate.Testing.FakePaymentGateway.CreatePaymentAsync(PayGate.CreatePaymentRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<PayGate.PaymentResult<PayGate.PaymentSession!>!>!
+PayGate.Testing.FakePaymentGateway.Expire(string! providerPaymentId) -> void
+PayGate.Testing.FakePaymentGateway.Fail(string! providerPaymentId, string! message = "Declined by the fake gateway.") -> void
+PayGate.Testing.FakePaymentGateway.FakePaymentGateway(PayGate.Testing.FakeGatewayOptions? options = null, string! accountName = "default", System.TimeProvider? timeProvider = null) -> void
+PayGate.Testing.FakePaymentGateway.GetPaymentAsync(PayGate.PaymentLookup! lookup, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<PayGate.PaymentResult<PayGate.PaymentDetails!>!>!
+PayGate.Testing.FakePaymentGateway.RefundAsync(PayGate.RefundRequest! request, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<PayGate.PaymentResult<PayGate.RefundResult!>!>!
+PayGate.Testing.FakePaymentGateway.ReportUnknownStatus(string! providerPaymentId, string! rawStatus) -> void
+PayGate.Testing.FakePaymentGateway.Succeed(string! providerPaymentId) -> void
+PayGate.Testing.FakePaymentGateway.TimeOutNextWrite() -> void
+PayGate.Testing.FakePaymentGateway.TryGetFeature<TFeature>(out TFeature? feature) -> bool
+PayGate.Testing.FakePaymentGateway.WriteAttempts.get -> System.Collections.Generic.IReadOnlyList<PayGate.Testing.FakeWriteAttempt!>!
+PayGate.Testing.FakeWebhookBuilder
+PayGate.Testing.FakeWebhookBuilder.FakeWebhookBuilder(PayGate.Testing.FakePaymentGateway! gateway) -> void
+PayGate.Testing.FakeWebhookBuilder.ForPayment(string! providerPaymentId, PayGate.Webhooks.PaymentEventType? type = null) -> PayGate.Webhooks.WebhookRequest!
+PayGate.Testing.FakeWebhookBuilder.Malformed() -> PayGate.Webhooks.WebhookRequest!
+PayGate.Testing.FakeWriteAttempt
+PayGate.Testing.FakeWriteAttempt.<Clone>$() -> PayGate.Testing.FakeWriteAttempt!
+PayGate.Testing.FakeWriteAttempt.Deconstruct(out string! Operation, out string? IdempotencyKey) -> void
+PayGate.Testing.FakeWriteAttempt.Equals(PayGate.Testing.FakeWriteAttempt? other) -> bool
+PayGate.Testing.FakeWriteAttempt.FakeWriteAttempt(string! Operation, string? IdempotencyKey) -> void
+PayGate.Testing.FakeWriteAttempt.IdempotencyKey.get -> string?
+PayGate.Testing.FakeWriteAttempt.IdempotencyKey.init -> void
+PayGate.Testing.FakeWriteAttempt.Operation.get -> string!
+PayGate.Testing.FakeWriteAttempt.Operation.init -> void
+PayGate.Testing.PayGateBuilderFakeExtensions
+static PayGate.Testing.FakePaymentGateway.ProviderId.get -> PayGate.PaymentProviderId
+static PayGate.Testing.FakeWebhookBuilder.Tampered(PayGate.Webhooks.WebhookRequest! webhook) -> PayGate.Webhooks.WebhookRequest!
+static PayGate.Testing.FakeWriteAttempt.operator !=(PayGate.Testing.FakeWriteAttempt? left, PayGate.Testing.FakeWriteAttempt? right) -> bool
+static PayGate.Testing.FakeWriteAttempt.operator ==(PayGate.Testing.FakeWriteAttempt? left, PayGate.Testing.FakeWriteAttempt? right) -> bool
+static PayGate.Testing.PayGateBuilderFakeExtensions.AddPayGateFake(this PayGate.PayGateBuilder! builder, System.Action<PayGate.Testing.FakeGatewayOptions!>? configure = null, string! accountName = "default") -> PayGate.PayGateBuilder!
