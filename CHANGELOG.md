@@ -4,6 +4,9 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+- `PayGate.AspNetCore` webhook endpoints: `MapPayGateWebhooks()` maps `POST` and `GET {prefix}/{provider}/{account?}`, and `IPayGateWebhookEndpoint` does the same from an MVC controller. The raw body reaches the verifier byte for byte, a body over `MaxBodyBytes` (256 KB by default) is answered 413 before verifying, and the response comes from the provider's ack policy.
+
 ## [0.1.0-preview] - 2026-11-08
 
 First preview. `PayGate.AspNetCore` and `PayGate.Kashier` are published with the same version but have no API yet: they get one in 0.2.0-preview and 0.3.0-preview.
