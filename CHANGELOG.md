@@ -6,6 +6,8 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ### Added
 - `PayGate.AspNetCore` webhook endpoints: `MapPayGateWebhooks()` maps `POST` and `GET {prefix}/{provider}/{account?}`, and `IPayGateWebhookEndpoint` does the same from an MVC controller. The raw body reaches the verifier byte for byte, a body over `MaxBodyBytes` (256 KB by default) is answered 413 before verifying, and the response comes from the provider's ack policy.
+- `PayGate.AspNetCore`: one log line per webhook with the account, outcome, status code, event ids and duration; `IPayGateReturnCallbacks` to read return callbacks and check redirect targets against `AllowedReturnUrls`; and a body limit per provider.
+- `PayGate`: `AddReturnParser<T>()` for provider packages.
 
 ## [0.1.0-preview] - 2026-11-08
 

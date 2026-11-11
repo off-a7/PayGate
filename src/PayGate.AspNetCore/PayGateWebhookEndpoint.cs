@@ -3,37 +3,47 @@
 using System.Buffers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 using PayGate.Webhooks;
 
 /// <summary>The default <see cref="IPayGateWebhookEndpoint"/>.</summary>
-internal sealed class PayGateWebhookEndpoint(
+internal sealed partial class PayGateWebhookEndpoint(
     IWebhookProcessor processor,
     IOptions<PayGateWebhookEndpointOptions> options,
-    TimeProvider timeProvider) : IPayGateWebhookEndpoint
+    TimeProvider timeProvider,
+    ILogger<PayGateWebhookEndpoint> logger) : IPayGateWebhookEndpoint
 {
     public const string ProviderRouteValue = "provider";
     public const string AccountRouteValue = "account";
 
     private const int _chunkSize = 16 * 1024;
+    private const string _tooLarge = "TooLarge";
+    private const string _unparsableRoute = "UnparsableRoute";
 
     public Task<IResult> HandleAsync(HttpContext context, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(context);
-        return TryReadAccount(context, out var account)
-            ? HandleAsync(context, account, cancellationToken)
-            : Task.FromResult(Results.StatusCode(StatusCodes.Status404NotFound));
+        if (TryReadAccount(context, out var account))
+        {
+            return HandleAsync(context, account, cancellationToken);
+        }
+
+        // The segments are not logged: they are whatever the caller typed.
+        LogRejected(_unparsableRoute, StatusCodes.Status404NotFound);
+        return Task.FromResult(Results.StatusCode(StatusCodes.Status404NotFound));
     }
 
     public async Task<IResult> HandleAsync(HttpContext context, PaymentAccount account, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(context);
 
+        long started = timeProvider.GetTimestamp();
         var request = context.Request;
-        byte[]? body = await ReadBodyAsync(request, options.Value.MaxBodyBytes, cancellationToken).ConfigureAwait(false);
+        byte[]? body = await ReadBodyAsync(request, options.Value.MaxBodyBytesFor(account.Provider), cancellationToken).ConfigureAwait(false);
         if (body is null)
         {
+            Log(account, _tooLarge, StatusCodes.Status413PayloadTooLarge, eventIds: [], started);
             return Results.StatusCode(StatusCodes.Status413PayloadTooLarge);
         }
 
@@ -41,13 +51,14 @@ internal sealed class PayGateWebhookEndpoint(
         {
             Account = account,
             Method = request.Method,
-            Headers = Copy(request.Headers),
-            Query = Copy(request.Query),
+            Headers = RequestValues.Copy(request.Headers),
+            Query = RequestValues.Copy(request.Query),
             Body = body,
             ReceivedAt = timeProvider.GetUtcNow(),
         };
 
         var result = await processor.ProcessAsync(webhook, cancellationToken).ConfigureAwait(false);
+        Log(account, result.Status.ToString(), result.Ack.StatusCode, result.EventIds, started);
         return result.Ack.Body is null
             ? Results.StatusCode(result.Ack.StatusCode)
             : Results.Text(result.Ack.Body, "text/plain; charset=utf-8", statusCode: result.Ack.StatusCode);
@@ -106,14 +117,34 @@ internal sealed class PayGateWebhookEndpoint(
         return buffer.ToArray();
     }
 
-    private static Dictionary<string, IReadOnlyList<string>> Copy(IEnumerable<KeyValuePair<string, StringValues>> values)
+    /// <summary>The one line per webhook: who sent it, what came of it, which events, and how long it took. Never the payload.</summary>
+    private void Log(PaymentAccount account, string outcome, int statusCode, IReadOnlyList<string> eventIds, long started)
     {
-        var copy = new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase);
-        foreach (var (key, value) in values)
-        {
-            copy[key] = [.. value.OfType<string>()];
-        }
+        double elapsedMs = timeProvider.GetElapsedTime(started).TotalMilliseconds;
+        string events = eventIds.Count == 0 ? "none" : string.Join(',', eventIds);
+        bool accepted = outcome is nameof(WebhookProcessingStatus.Processed)
+            or nameof(WebhookProcessingStatus.AlreadyProcessed)
+            or nameof(WebhookProcessingStatus.Ignored);
 
-        return copy;
+        if (accepted)
+        {
+            LogReceived(account, outcome, statusCode, events, elapsedMs);
+        }
+        else
+        {
+            LogNotAccepted(account, outcome, statusCode, events, elapsedMs);
+        }
     }
+
+    [LoggerMessage(EventId = 2000, EventName = "WebhookReceived", Level = LogLevel.Information,
+        Message = "Webhook for {Account} was {Outcome} and answered {StatusCode} in {ElapsedMs:0} ms; events {EventIds}")]
+    private partial void LogReceived(PaymentAccount account, string outcome, int statusCode, string eventIds, double elapsedMs);
+
+    [LoggerMessage(EventId = 2001, EventName = "WebhookNotAccepted", Level = LogLevel.Warning,
+        Message = "Webhook for {Account} was {Outcome} and answered {StatusCode} in {ElapsedMs:0} ms; events {EventIds}")]
+    private partial void LogNotAccepted(PaymentAccount account, string outcome, int statusCode, string eventIds, double elapsedMs);
+
+    [LoggerMessage(EventId = 2002, EventName = "WebhookRouteRejected", Level = LogLevel.Warning,
+        Message = "A webhook was {Outcome} and answered {StatusCode}: its provider or account segment is not a valid id")]
+    private partial void LogRejected(string outcome, int statusCode);
 }

@@ -201,6 +201,66 @@ public sealed class WebhookEndpointTests
     }
 
     [Fact]
+    public async Task A_provider_can_have_its_own_body_limit_Async()
+    {
+        await using var host = await TestHost.StartAsync(endpoint: options => options.MaxBodyBytesByProvider["recorder"] = 8);
+        var webhook = await TestHost.PaidWebhookAsync(host.Fake);
+
+        using var recorder = await host.Client.PostAsync(new Uri("/webhooks/recorder", UriKind.Relative), new ByteArrayContent(new byte[9]), Token);
+        using var fake = await host.PostAsync("/webhooks/fake", webhook);
+
+        recorder.StatusCode.ShouldBe(HttpStatusCode.RequestEntityTooLarge);
+        fake.StatusCode.ShouldBe(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task Each_webhook_is_logged_once_without_its_payload_Async()
+    {
+        await using var host = await TestHost.StartAsync();
+        var webhook = await TestHost.PaidWebhookAsync(host.Fake);
+        string payload = Encoding.UTF8.GetString(webhook.Body.Span);
+
+        (await host.PostAsync("/webhooks/fake", webhook)).Dispose();
+
+        var entry = host.Logs.For("WebhookReceived").ShouldHaveSingleItem();
+        entry.Level.ShouldBe(LogLevel.Information);
+        entry.Values["Account"].ShouldBe("fake");
+        entry.Values["Outcome"].ShouldBe("Processed");
+        entry.Values["StatusCode"].ShouldBe("200");
+        entry.Values["EventIds"].ShouldBe(host.Inbox.Events.Single().EventId);
+        entry.Values.ShouldContainKey("ElapsedMs");
+        host.Logs.Entries.ShouldAllBe(e => !e.Message.Contains(payload, StringComparison.Ordinal));
+        host.Logs.Entries.ShouldAllBe(e => !e.Message.Contains(webhook.GetHeader(FakeWebhookBuilder.SignatureHeader)!, StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("/webhooks/fake", "InvalidSignature", 401, "WebhookNotAccepted")]
+    [InlineData("/webhooks/fake/nobody", "UnknownAccount", 404, "WebhookNotAccepted")]
+    [InlineData("/webhooks/bad!provider", "UnparsableRoute", 404, "WebhookRouteRejected")]
+    public async Task A_webhook_that_is_not_accepted_is_logged_as_a_warning_Async(string path, string outcome, int status, string eventName)
+    {
+        await using var host = await TestHost.StartAsync();
+
+        (await host.Client.PostAsync(new Uri(path, UriKind.Relative), new ByteArrayContent([1, 2, 3]), Token)).Dispose();
+
+        var entry = host.Logs.For(eventName).ShouldHaveSingleItem();
+        entry.Level.ShouldBe(LogLevel.Warning);
+        entry.Values["Outcome"].ShouldBe(outcome);
+        entry.Values["StatusCode"].ShouldBe(status.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        entry.Message.ShouldNotContain("bad!provider");
+    }
+
+    [Fact]
+    public async Task An_oversized_webhook_is_logged_as_too_large_Async()
+    {
+        await using var host = await TestHost.StartAsync(maxBodyBytes: 4);
+
+        (await host.Client.PostAsync(new Uri("/webhooks/recorder", UriKind.Relative), new ByteArrayContent(new byte[5]), Token)).Dispose();
+
+        host.Logs.For("WebhookNotAccepted").ShouldHaveSingleItem().Values["Outcome"].ShouldBe("TooLarge");
+    }
+
+    [Fact]
     public async Task A_limit_that_is_not_positive_stops_the_app_from_starting_Async()
     {
         await Should.ThrowAsync<OptionsValidationException>(async () =>
@@ -213,13 +273,16 @@ public sealed class WebhookEndpointTests
     {
         private readonly WebApplication _app;
 
-        private TestHost(WebApplication app)
+        private TestHost(WebApplication app, LogCapture logs)
         {
             _app = app;
+            Logs = logs;
             Client = app.GetTestClient();
         }
 
         public HttpClient Client { get; }
+
+        public LogCapture Logs { get; }
 
         public Inbox Inbox => _app.Services.GetRequiredService<Inbox>();
 
@@ -232,11 +295,14 @@ public sealed class WebhookEndpointTests
         public static async Task<TestHost> StartAsync(
             Action<PayGateBuilder>? configure = null,
             int? maxBodyBytes = null,
-            string prefix = _minimalPrefix)
+            string prefix = _minimalPrefix,
+            Action<PayGateWebhookEndpointOptions>? endpoint = null)
         {
+            var logs = new LogCapture();
             var builder = WebApplication.CreateBuilder(new WebApplicationOptions { EnvironmentName = Environments.Development });
             builder.WebHost.UseTestServer();
             builder.Logging.ClearProviders();
+            builder.Logging.AddProvider(logs);
             builder.Services.AddSingleton<Inbox>();
             builder.Services.AddSingleton<RequestRecorder>();
             builder.Services.AddControllers().AddApplicationPart(typeof(WebhookEndpointTests).Assembly);
@@ -249,6 +315,8 @@ public sealed class WebhookEndpointTests
                     {
                         options.MaxBodyBytes = limit;
                     }
+
+                    endpoint?.Invoke(options);
                 })
                 .AddEventHandler<InboxHandler>()
                 .AddPayGateFake()
@@ -262,7 +330,7 @@ public sealed class WebhookEndpointTests
             app.MapPayGateWebhooks(prefix);
             app.MapControllers();
             await app.StartAsync(Token);
-            return new TestHost(app);
+            return new TestHost(app, logs);
         }
 
         public static async Task<WebhookRequest> PaidWebhookAsync(FakePaymentGateway gateway)
@@ -287,6 +355,46 @@ public sealed class WebhookEndpointTests
             await _app.DisposeAsync();
         }
     }
+
+    /// <summary>Records every log entry with its structured values.</summary>
+    private sealed class LogCapture : ILoggerProvider
+    {
+        private readonly System.Collections.Concurrent.ConcurrentQueue<LogEntry> _entries = new();
+
+        public IReadOnlyList<LogEntry> Entries => [.. _entries];
+
+        public IReadOnlyList<LogEntry> For(string eventName) => [.. _entries.Where(e => e.EventName == eventName)];
+
+        public ILogger CreateLogger(string categoryName) => new Logger(_entries);
+
+        public void Dispose()
+        {
+        }
+
+        private sealed class Logger(System.Collections.Concurrent.ConcurrentQueue<LogEntry> entries) : ILogger
+        {
+            public IDisposable? BeginScope<TState>(TState state)
+                where TState : notnull => null;
+
+            public bool IsEnabled(LogLevel logLevel) => true;
+
+            public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+            {
+                var values = new Dictionary<string, string?>(StringComparer.Ordinal);
+                if (state is IEnumerable<KeyValuePair<string, object?>> pairs)
+                {
+                    foreach (var (key, value) in pairs)
+                    {
+                        values[key] = value?.ToString();
+                    }
+                }
+
+                entries.Enqueue(new LogEntry(eventId.Name, logLevel, formatter(state, exception), values));
+            }
+        }
+    }
+
+    private sealed record LogEntry(string? EventName, LogLevel Level, string Message, Dictionary<string, string?> Values);
 
     /// <summary>Posts a body without a Content-Length, as a chunked request would.</summary>
     private sealed class UnknownLengthContent(byte[] body) : HttpContent
