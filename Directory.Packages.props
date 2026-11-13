@@ -44,7 +44,7 @@
     <!-- The concrete container, used by tests to build service providers -->
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.13" />
     <!-- In-memory ASP.NET Core server for endpoint tests -->
-    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.15" />
   </ItemGroup>
 
 </Project>
