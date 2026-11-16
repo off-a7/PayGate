@@ -30,6 +30,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Sample app only: the app-owned tables live in SQLite. The packages never depend on EF Core. -->
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.13" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!--
       Test stack. FluentAssertions 8+ is commercially licensed and Moq had the SponsorLink
       incident, so neither is used.

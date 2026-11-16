@@ -1,10 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <!-- Reference application showing app-owned persistence around PayGate. Filled in by Phase 2. -->
+  <!--
+    Reference application showing app-owned persistence around PayGate: the app keeps its orders,
+    payment attempts and webhook inbox in its own database, and PayGate stores nothing.
+  -->
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\PayGate.AspNetCore\PayGate.AspNetCore.csproj" />
     <ProjectReference Include="..\..\src\PayGate.Kashier\PayGate.Kashier.csproj" />
+    <ProjectReference Include="..\..\src\PayGate.Testing\PayGate.Testing.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
   </ItemGroup>
 
 </Project>
