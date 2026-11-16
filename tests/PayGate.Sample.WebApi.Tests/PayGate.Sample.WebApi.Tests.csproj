@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Runs the sample app in memory and drives the whole payment flow through HTTP, on the fake gateway. -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\samples\PayGate.Sample.WebApi\PayGate.Sample.WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+  </ItemGroup>
+
+</Project>
