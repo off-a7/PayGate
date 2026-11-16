@@ -68,5 +68,7 @@ The SDK version is pinned in [`global.json`](global.json).
 
 ## Documentation
 
+- [Receiving webhooks](docs/webhooks.md): endpoint setup, public URLs and tunnels, the dedupe contract
+- [Sample app](samples/README.md): app-owned tables, inbox dedupe, refunds and reconciliation on the fake gateway
 - [Contributing](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
