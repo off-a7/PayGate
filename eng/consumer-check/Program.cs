@@ -7,6 +7,7 @@ using PayGate.Testing;
 using PayGate.Webhooks;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
 builder.Services.AddPayGate()
     .AddEventHandler<ConsumerEventHandler>()
     .AddWebhookEndpoints(options => options.MaxBodyBytes = 128 * 1024)
@@ -15,6 +16,7 @@ builder.Services.AddPayGate()
 
 var app = builder.Build();
 app.MapPayGateWebhooks().AllowAnonymous();
+app.MapControllers();
 
 app.MapGet("/", (IPaymentGatewayResolver resolver) =>
 {

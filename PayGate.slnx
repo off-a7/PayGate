@@ -13,6 +13,7 @@
     <Project Path="tests/PayGate.AspNetCore.Tests/PayGate.AspNetCore.Tests.csproj" />
     <Project Path="tests/PayGate.Conformance/PayGate.Conformance.csproj" />
     <Project Path="tests/PayGate.Kashier.Tests/PayGate.Kashier.Tests.csproj" />
+    <Project Path="tests/PayGate.Sample.WebApi.Tests/PayGate.Sample.WebApi.Tests.csproj" />
     <Project Path="tests/PayGate.SandboxTests/PayGate.SandboxTests.csproj" />
     <Project Path="tests/PayGate.Tests/PayGate.Tests.csproj" />
   </Folder>

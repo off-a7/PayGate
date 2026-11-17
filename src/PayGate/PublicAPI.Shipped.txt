@@ -14,6 +14,7 @@ PayGate.PayGateBuilder.AddAccountOptions<TOptions>(PayGate.PaymentAccount accoun
 PayGate.PayGateBuilder.AddEventHandler<THandler>() -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.AddGateway(PayGate.PaymentAccount account, System.Func<System.IServiceProvider!, PayGate.IPaymentGateway!>! factory) -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.AddProviderHttpClient(PayGate.PaymentAccount account, System.Action<System.IServiceProvider!, System.Net.Http.HttpClient!>? configureClient = null) -> Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!
+PayGate.PayGateBuilder.AddReturnParser<TParser>() -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.AddWebhookAckPolicy<TPolicy>() -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.AddWebhookVerifier<TVerifier>() -> PayGate.PayGateBuilder!
 PayGate.PayGateBuilder.ConfigureHttpClient(PayGate.PaymentAccount account, System.Action<Microsoft.Extensions.DependencyInjection.IHttpClientBuilder!>! configure) -> PayGate.PayGateBuilder!

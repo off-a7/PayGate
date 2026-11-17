@@ -4,10 +4,16 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.2.0-preview] - 2026-11-16
+
+ASP.NET Core integration. `PayGate.Kashier` is still published with no API: it gets one in 0.3.0-preview.
+
 ### Added
 - `PayGate.AspNetCore` webhook endpoints: `MapPayGateWebhooks()` maps `POST` and `GET {prefix}/{provider}/{account?}`, and `IPayGateWebhookEndpoint` does the same from an MVC controller. The raw body reaches the verifier byte for byte, a body over `MaxBodyBytes` (256 KB by default) is answered 413 before verifying, and the response comes from the provider's ack policy.
 - `PayGate.AspNetCore`: one log line per webhook with the account, outcome, status code, event ids and duration; `IPayGateReturnCallbacks` to read return callbacks and check redirect targets against `AllowedReturnUrls`; and a body limit per provider.
 - `PayGate`: `AddReturnParser<T>()` for provider packages.
+- [Receiving webhooks](docs/webhooks.md): setup for minimal APIs and controllers, public URLs and tunnels, and the dedupe contract apps must follow.
+- Sample app (`samples/PayGate.Sample.WebApi`, not published): app-owned orders, attempts and webhook inbox on SQLite, a new attempt per checkout, amount checks, fulfillment once, partial and full refunds, a return page that asks the provider, and a reconciliation job. It runs on the fake gateway, with end-to-end tests.
 
 ## [0.1.0-preview] - 2026-11-08
 
@@ -24,5 +30,6 @@ First preview. `PayGate.AspNetCore` and `PayGate.Kashier` are published with the
 - `PayGate` telemetry: an `ActivitySource` and a `Meter` named `PayGate` cover gateway calls and webhook verify and dispatch, for every gateway registered with `AddGateway`. Tags carry the provider, account, operation and outcome only.
 - `PayGate.Testing`: `FakePaymentGateway` for the redirect, client-SDK and pay-later flows with controllable outcomes, `FakeWebhookBuilder` for signed webhooks, and `AddPayGateFake()`, which refuses to start in Production unless allowed.
 
-[Unreleased]: https://github.com/off-a7/PayGate/compare/v0.1.0-preview...HEAD
+[Unreleased]: https://github.com/off-a7/PayGate/compare/v0.2.0-preview...HEAD
+[0.2.0-preview]: https://github.com/off-a7/PayGate/compare/v0.1.0-preview...v0.2.0-preview
 [0.1.0-preview]: https://github.com/off-a7/PayGate/releases/tag/v0.1.0-preview

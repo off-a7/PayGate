@@ -492,3 +492,8 @@ IMPLEMENTATION_PLAN.md
 docs/adr/
 docs/plan/
 docs/walkthroughs/
+
+# Sample app database
+samples/**/*.db
+samples/**/*.db-shm
+samples/**/*.db-wal

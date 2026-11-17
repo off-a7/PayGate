@@ -29,7 +29,7 @@ public sealed class WebhooksController(IPayGateWebhookEndpoint webhooks) : Contr
 }
 ```
 
-Requires .NET 10 (`net10.0`).
+Requires .NET 10 (`net10.0`). The full guide, with the dedupe contract your handler must follow, is [Receiving webhooks](https://github.com/off-a7/PayGate/blob/main/docs/webhooks.md).
 
 Each webhook is logged once (event id 2000, or 2001 when it is not accepted) with the account, outcome, status code, event ids and duration, never the payload.
 
