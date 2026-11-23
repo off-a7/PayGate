@@ -1,1 +1,3 @@
 #nullable enable
+PayGate.PaymentCapabilities.RejectsDuplicateReference.get -> bool
+PayGate.PaymentCapabilities.RejectsDuplicateReference.init -> void

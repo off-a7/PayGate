@@ -44,6 +44,7 @@ public sealed class FakePaymentGateway : IPaymentGateway, IPaymentCancelFeature
             PaymentExpiry = true,
             PerRequestNotificationUrl = true,
             MetadataPassthrough = true,
+            RejectsDuplicateReference = true,
         };
     }
 

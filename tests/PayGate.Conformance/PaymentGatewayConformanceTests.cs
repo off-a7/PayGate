@@ -70,6 +70,7 @@ public abstract class PaymentGatewayConformanceTests
     [Fact]
     public async Task A_different_request_with_a_used_reference_is_a_duplicate_Async()
     {
+        Assert.SkipUnless(Gateway.Capabilities.RejectsDuplicateReference, "The provider accepts a reused merchant reference.");
         var request = Request();
         await CreateAsync(request);
 
@@ -82,6 +83,9 @@ public abstract class PaymentGatewayConformanceTests
     [Fact]
     public async Task An_identical_replay_returns_the_original_session_or_a_duplicate_Async()
     {
+        Assert.SkipUnless(
+            Gateway.Capabilities.IdempotentWrites || Gateway.Capabilities.RejectsDuplicateReference,
+            "The provider neither replays idempotent writes nor rejects a reused merchant reference.");
         var request = Request();
         var original = await CreateAsync(request);
 
