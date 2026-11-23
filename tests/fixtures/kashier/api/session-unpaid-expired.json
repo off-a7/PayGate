@@ -1,0 +1,55 @@
+{
+  "kind": "Outbound",
+  "label": "session-payment",
+  "method": "GET",
+  "path": "/v3/payment/sessions/6b02f831f6ff30226e453b07/payment",
+  "status": 200,
+  "error": null,
+  "request": null,
+  "response": {
+    "message": "success",
+    "data": {
+      "sessionId": "6b02f831f6ff30226e453b07",
+      "status": "EXPIRED",
+      "createdAt": "2026-11-22T14:12:01.110Z",
+      "updatedAt": "2026-11-23T06:40:29.623Z",
+      "merchantId": "MID-0000-000",
+      "merchantOrderId": "PG-20261122141152-8482",
+      "amount": 113.34,
+      "currency": "EGP",
+      "pcc": {},
+      "orderId": "NA",
+      "capturedAmount": 0,
+      "refundedAmount": 0,
+      "paymentChannel": "ONLINE",
+      "hasSuccessfulAuthorization": false,
+      "rfsDate": "NA",
+      "lastTransactionType": "NA",
+      "issuerAuthorizationCode": "NA",
+      "metaData": {
+        "playgroundRef": "PG-20261122141152-8482",
+        "source": "paygate-playground"
+      },
+      "shopifyFees": "NA",
+      "customer": {
+        "reference": "cust-PG-20261122141152-8482",
+        "email": "customer@example.com"
+      },
+      "posTerminal": {
+        "terminalId": "NA"
+      },
+      "history": [
+        {
+          "status": "EXPIRED",
+          "date": "2026-11-22T15:00:03.893Z"
+        },
+        {
+          "status": "CREATED",
+          "date": "2026-11-22T14:12:01.108Z"
+        }
+      ]
+    }
+  },
+  "capturedAt": "2026-11-23T08:01:50.8772357\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

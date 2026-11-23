@@ -2,7 +2,7 @@
 
 > **Status:** these are the sandbox findings that `PayGate.Kashier` is built on (Phase 3 spike, items P3-01 to P3-06). Setup and usage instructions will be added when the package ships in `0.3.0-preview`.
 
-The rules below were seen in Kashier's **test** environment on **2026-11-22**. Each one is checked against both the developer docs (developers.kashier.io, read the same day) and recorded traffic. The traffic is in [tests/fixtures/kashier](../../tests/fixtures/kashier/README.md), sanitized and re-signed with a dummy key. Where the docs and the traffic disagree, the traffic wins, and the table at the end lists the differences.
+The rules below were seen in Kashier's **test** environment on **2026-11-22** and **2026-11-23**. Each one is checked against both the developer docs (developers.kashier.io, read the same day) and recorded traffic. The traffic is in [tests/fixtures/kashier](../../tests/fixtures/kashier/README.md), sanitized and re-signed with a dummy key. Where the docs and the traffic disagree, the traffic wins, and the table at the end lists the differences.
 
 ## Hosts, keys and headers
 
@@ -43,6 +43,25 @@ So:
 - Refund, void and capture go to **that** order's `orderId`, not to the `kashierOrderId` of the first webhook.
 - A `Failed` → `Succeeded` change for one reference is normal.
 
+## Reading one payment: the session lookup
+`GET {api}/v3/payment/sessions/{sessionId}/payment` (Secret Key only) returns `{message, data}`, where `data` is **the session's single outcome**. That makes it what `GetPaymentAsync` reads, with the session id as PayGate's provider payment id. Recorded on 2026-11-23:
+
+| `data.status` | When | PayGate |
+|---|---|---|
+| `CREATED`, `OPENED`, `PENDING` | not paid yet (seen in `history`) | Pending |
+| `PAID` | paid and captured, by card or wallet | Succeeded |
+| `PARTIALLY_REFUNDED` / `REFUNDED` | after refunds | PartiallyRefunded / Refunded |
+| `VOIDED` | after a void | Canceled |
+| `EXPIRED` | the session ended unpaid, **including after a declined try** | Expired |
+
+- **A retried session points at the order that went through.** With a decline then a success, `orderId` is the successful order, so there's nothing to choose. Refunds and voids use this `orderId`. Until someone tries to pay it is the literal `NA`.
+- `capturedAmount` and `refundedAmount` are the session's totals, and `targetTransactionId` is the pay or capture transaction.
+- `sourceOfFunds` is flat here (`maskedCard`, `cardBrand`), unlike the order inquiry's `sourceOfFunds.cardInfo`.
+- `fees`, `vat` and `settlementAmount` describe the last operation. They're negative after a refund or void.
+- `history[]` lists every step, newest first, with `operation`, `status`, `transactionResponseCode` and a bilingual message. The newest `FAILURE` explains a declined session.
+- An unknown session id answers `404 {"messages":{"en":"Payment session not found"}}`.
+- It also echoes the dashboard user behind refunds and voids (`history[].performedBy`, `metaData.kashier_user`). Don't log it.
+
 ## Order inquiry
 Each order has `status`, `totalCapturedAmount`, `totalRefundedAmount`, `totalAuthorizedAmount`, `method`, `sourceOfFunds.cardInfo` (`maskedCard`, `cardBrand`) and `transactions[]`.
 
@@ -63,7 +82,9 @@ Each order has `status`, `totalCapturedAmount`, `totalRefundedAmount`, `totalAut
 | `FAILED` | Failed |
 | anything else | Unknown (kept raw) |
 
-**Capture behaviour depends on the card, even for one merchant.** In test mode, the plain Mastercard went straight to `pay` / `CAPTURED`. The 3-D Secure Visa stopped at `authorize` / `AUTHORIZED`, even though `manualCapture: false` was sent. An `AUTHORIZED` payment needs a capture before it can be refunded. A void releases it instead. The authorization expires after 7 days (`authExpiryDate`).
+**A payment can stop at `AUTHORIZED` without asking for it.** The first sandbox payment (3-D Secure Visa, 2026-11-22) ended as `authorize` / `AUTHORIZED` even though `manualCapture: false` was sent. The same card on 2026-11-23, and every other card, went straight to `pay` / `CAPTURED`, so the cause is not the card alone. PayGate reports `Authorized` whenever Kashier does:
+- an `AUTHORIZED` payment needs a capture before it can be refunded, and a void releases it instead
+- the authorization expires after 7 days (`authExpiryDate`)
 
 ## Capture, refund and void
 All three are `PUT {fep}/v3/orders/{orderId}` with the Secret Key only, and `apiOperation` set to `CAPTURE`, `REFUND` or `VOID`.
@@ -124,7 +145,7 @@ These come from the docs; the expiry date picks the outcome.
 |---|---|---|
 | Mastercard `5111 1111 1111 1118` | `06/27` | approved and captured at once |
 | Mastercard `5111 1111 1111 1118` | `02/37` | declined, `UNSPECIFIED FAILURE` (`AA`) |
-| Visa `4508 7500 1574 1019` (3-D Secure) | `06/27` | approved, stopped at `AUTHORIZED` |
+| Visa `4508 7500 1574 1019` (3-D Secure) | `06/27` | approved after the ACS emulator page (submit its default "(Y) Authentication Successful"); once stopped at `AUTHORIZED`, later captured at once |
 
 - The docs' `06/25` (approved) and `05/25` (declined) are in the past, so the payment page refuses them.
 - CVV `100` = match.
@@ -139,7 +160,7 @@ These come from the docs; the expiry date picks the outcome.
 | Partial refund webhook event | `partial_refund` | `refund` |
 | Refund result | `SUCCESS`, `FAILURE` or `PENDING` | always synchronous `SUCCESS`; an over-refund is a 401 |
 | Webhook amount unit | not stated (example `11334`) | major units |
-| `manualCapture: false` | captured | captured or `AUTHORIZED`, depending on the card |
+| `manualCapture: false` | captured | captured, but once `AUTHORIZED` with no clear cause |
 
 The older integration this replaces signed redirects with the Secret Key over the sorted query. **That scheme does not match Kashier's signatures.** The docs' fixed-list scheme with the Payment API Key does.
 

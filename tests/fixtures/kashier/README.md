@@ -1,6 +1,6 @@
 # Kashier fixtures
 
-These are real traffic from Kashier's **test** environment, recorded on 2026-11-22 with the PayGate playground: a separate app that calls Kashier directly and stores every request, redirect and webhook. What they prove is written up in [docs/providers/kashier.md](../../../docs/providers/kashier.md).
+These are real traffic from Kashier's **test** environment, recorded on 2026-11-22 and 2026-11-23 with the PayGate playground: a separate app that calls Kashier directly and stores every request, redirect and webhook. What they prove is written up in [docs/providers/kashier.md](../../../docs/providers/kashier.md).
 
 ## They are sanitized and re-signed
 Before a capture was copied here, the playground's fixture exporter made two passes.
@@ -9,7 +9,7 @@ First, it replaced the merchant's identity and anything personal:
 - the merchant id, which becomes `MID-0000-000`
 - the merchant number Kashier embeds in every transaction id: `TX-<8 digits><n>` becomes `TX-00000000<n>`
 - the Payment API Key Kashier echoes in `apiKey`
-- `merchantDetails`, and the `metaData.kashier_user` block
+- `merchantDetails`, the `metaData.kashier_user` block and `history[].performedBy`
 - card and CVV tokens, names, emails, IPs and user agents
 - the public tunnel host, which becomes `playground.example`
 
@@ -43,6 +43,7 @@ As a result:
 | `api/create-session-localhost-redirect-400.json` | 400 `"merchantRedirect" must be a valid URL` for a localhost redirect |
 | `api/search-orders-retried-session.json` | `GET /v3/payment/orders?search=` returning **two orders** for one reference (CAPTURED and FAILED) |
 | `api/capture.json`, `refund-partial.json`, `refund-remainder.json`, `void.json` | `PUT {fep}/v3/orders/{orderId}`, all synchronous 200s |
+| `api/session-*.json` (10 files, 2026-11-23) | `GET /v3/payment/sessions/{id}/payment`: `paid`, `3ds-paid`, `wallet-paid`, `retried-paid` (points at the successful order), `partially-refunded`, `refunded`, `voided`, `unpaid-expired` (`orderId: NA`), `failed-expired` (the decline is in `history`), `not-found-404` |
 | `api/refund-over-refund-401.json` | Refunding more than is left gives **401** `Authorization error`, not 400 |
 
 Don't edit these files by hand. If you change a signed field, the signature no longer verifies. Record new traffic with the playground instead.
