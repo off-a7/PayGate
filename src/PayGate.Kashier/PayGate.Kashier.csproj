@@ -8,4 +8,9 @@
     <ProjectReference Include="..\PayGate\PayGate.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- The transport and Kashier's wire types stay internal; their tests replay recorded Kashier traffic. -->
+    <InternalsVisibleTo Include="PayGate.Kashier.Tests" />
+  </ItemGroup>
+
 </Project>

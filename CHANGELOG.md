@@ -4,6 +4,11 @@ All notable changes to this project are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+### Added
+- `PayGate.Kashier` settings: `AddKashier(configure, accountName)` registers a Kashier account with `KashierAccountOptions` (merchant id, secret key, Payment API Key, optional transfer key, payment page defaults). They are validated when the app starts: the keys must be set, and a Kashier host must match the environment, so test keys can't be pointed at live hosts or the reverse. The payment gateway itself follows in the next batch.
+- `PayGate.Kashier` transport: one HTTP client per account serves both the API and FEP hosts, HTTP/1.1 is pinned, credentials are read per call, so a tenant store can supply them, and responses are read leniently.
+- [Kashier findings](docs/providers/kashier.md): what Kashier's sandbox actually does, recorded on 2026-11-22, with 21 sanitized fixtures re-signed with a dummy key under `tests/fixtures/kashier`.
+
 ## [0.2.0-preview] - 2026-11-16
 
 ASP.NET Core integration. `PayGate.Kashier` is still published with no API: it gets one in 0.3.0-preview.
