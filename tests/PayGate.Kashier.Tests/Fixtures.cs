@@ -17,6 +17,14 @@ internal static class Fixtures
     /// <summary>The body Kashier answered an API call with, exactly as recorded.</summary>
     public static string ApiResponse(string name) => Load($"api/{name}.json")["response"]!.ToJsonString();
 
+    /// <summary>A recorded session lookup with its status changed, for statuses the sandbox didn't produce on demand.</summary>
+    public static string SessionWithStatus(string name, string status)
+    {
+        var response = Load($"api/{name}.json")["response"]!.AsObject();
+        response["data"]!["status"] = status;
+        return response.ToJsonString();
+    }
+
     /// <summary>The HTTP status Kashier answered an API call with.</summary>
     public static int ApiStatus(string name) => Load($"api/{name}.json")["status"]!.GetValue<int>();
 }

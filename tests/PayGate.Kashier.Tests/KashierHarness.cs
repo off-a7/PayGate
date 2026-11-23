@@ -40,6 +40,9 @@ internal sealed class KashierHarness : IDisposable
 
     public KashierApiClient Client => Provider.GetRequiredKeyedService<KashierApiClient>(Account.ToString());
 
+    /// <summary>The gateway an app resolves, wrapped in PayGate's instrumentation.</summary>
+    public IPaymentGateway Gateway => Provider.GetRequiredService<IPaymentGatewayResolver>().GetGateway(Account);
+
     public Task<PaymentResult<KashierResponse<KashierSessionResponse>>> CreateSessionAsync(KashierSessionRequest? request = null) =>
         Client.SendAsync(
             KashierHost.Api,
