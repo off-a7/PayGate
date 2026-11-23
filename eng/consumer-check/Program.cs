@@ -2,6 +2,7 @@
 // strict consumer settings, not just referenced.
 using PayGate;
 using PayGate.AspNetCore;
+using PayGate.Kashier;
 using PayGate.Providers;
 using PayGate.Testing;
 using PayGate.Webhooks;
@@ -12,6 +13,7 @@ builder.Services.AddPayGate()
     .AddEventHandler<ConsumerEventHandler>()
     .AddWebhookEndpoints(options => options.MaxBodyBytes = 128 * 1024)
     .AddPayGateFake(options => options.Flow = FakeFlow.DisplayReference)
+    .AddKashier(options => builder.Configuration.GetSection("Payments:Kashier").Bind(options))
     .ConfigureWebhooks(new PaymentAccount(FakePaymentGateway.ProviderId), options => options.ConfirmWithProvider = true);
 
 var app = builder.Build();
