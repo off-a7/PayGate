@@ -2,6 +2,8 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using PayGate.Kashier.Transport;
 
@@ -9,8 +11,9 @@ using PayGate.Kashier.Transport;
 public static class KashierPayGateBuilderExtensions
 {
     /// <summary>
-    /// Registers a Kashier account as <c>kashier</c>, or <c>kashier:name</c>. Its settings are validated when the app starts:
-    /// the keys must be set and the hosts must match the environment.
+    /// Registers a Kashier account as <c>kashier</c>, or <c>kashier:name</c>, with its payment gateway. Its settings are
+    /// validated when the app starts: the keys must be set and the hosts must match the environment. Resolve the gateway with
+    /// <see cref="IPaymentGatewayResolver"/>; it also offers <see cref="IPaymentCancelFeature"/> to void a payment.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="configure">
@@ -53,6 +56,10 @@ public static class KashierPayGateBuilderExtensions
             services.GetRequiredService<IHttpClientFactory>(),
             services.GetRequiredService<IPaymentCredentialsProvider<KashierAccountOptions>>()));
 
-        return builder;
+        return builder.AddGateway(account, services => new KashierPaymentGateway(
+            services.GetRequiredKeyedService<KashierApiClient>(key),
+            services.GetRequiredService<IPaymentCredentialsProvider<KashierAccountOptions>>(),
+            services.GetRequiredService<TimeProvider>(),
+            services.GetService<ILogger<KashierPaymentGateway>>() ?? NullLogger<KashierPaymentGateway>.Instance));
     }
 }

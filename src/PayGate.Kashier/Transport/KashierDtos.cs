@@ -167,6 +167,74 @@ internal sealed class KashierMessage
     public string? Ar { get; init; }
 }
 
+/// <summary>
+/// <c>GET {api}/v3/payment/sessions/{id}/payment</c>: one session's outcome. When the customer retried, it points at the
+/// order that went through.
+/// </summary>
+internal sealed class KashierSessionPaymentResponse
+{
+    public string? Message { get; init; }
+
+    public KashierSessionPayment? Data { get; init; }
+}
+
+internal sealed class KashierSessionPayment
+{
+    public string? SessionId { get; init; }
+
+    /// <summary><c>CREATED</c>, <c>OPENED</c>, <c>PENDING</c>, <c>PAID</c>, <c>PARTIALLY_REFUNDED</c>, <c>REFUNDED</c>, <c>VOIDED</c>, <c>EXPIRED</c>…</summary>
+    public string? Status { get; init; }
+
+    public string? MerchantOrderId { get; init; }
+
+    public decimal? Amount { get; init; }
+
+    public string? Currency { get; init; }
+
+    public string? Method { get; init; }
+
+    /// <summary>The order refunds and voids go to; <c>NA</c> until the customer tries to pay.</summary>
+    public string? OrderId { get; init; }
+
+    public decimal? CapturedAmount { get; init; }
+
+    public decimal? RefundedAmount { get; init; }
+
+    public string? LastTransactionType { get; init; }
+
+    /// <summary>The pay or capture transaction.</summary>
+    public string? TargetTransactionId { get; init; }
+
+    /// <summary>Flat here, unlike the order inquiry's <c>sourceOfFunds.cardInfo</c>.</summary>
+    public KashierCardInfo? SourceOfFunds { get; init; }
+
+    public decimal? Fees { get; init; }
+
+    public decimal? Vat { get; init; }
+
+    public decimal? SettlementAmount { get; init; }
+
+    /// <summary>Every step, newest first.</summary>
+    public IReadOnlyList<KashierSessionHistoryEntry> History { get; init; } = [];
+
+    public DateTimeOffset? CreatedAt { get; init; }
+
+    public DateTimeOffset? UpdatedAt { get; init; }
+}
+
+internal sealed class KashierSessionHistoryEntry
+{
+    public string? Status { get; init; }
+
+    public string? Operation { get; init; }
+
+    public string? TransactionId { get; init; }
+
+    public string? TransactionResponseCode { get; init; }
+
+    public KashierMessage? TransactionResponseMessage { get; init; }
+}
+
 /// <summary><c>PUT {fep}/v3/orders/{orderId}</c> for <c>CAPTURE</c>, <c>REFUND</c> or <c>VOID</c>.</summary>
 internal sealed class KashierOrderOperationRequest
 {
@@ -231,6 +299,7 @@ internal sealed class KashierOperationResult
 [JsonSerializable(typeof(KashierSessionRequest))]
 [JsonSerializable(typeof(KashierSessionResponse))]
 [JsonSerializable(typeof(KashierOrdersResponse))]
+[JsonSerializable(typeof(KashierSessionPaymentResponse))]
 [JsonSerializable(typeof(KashierOrderOperationRequest))]
 [JsonSerializable(typeof(KashierOrderOperationResponse))]
 internal sealed partial class KashierJsonContext : JsonSerializerContext;

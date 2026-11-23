@@ -60,6 +60,14 @@ public sealed class KashierAccountOptions : PaymentAccountOptions
     /// <summary>How many failed tries a customer gets on one payment page. Defaults to 3.</summary>
     public int MaxFailureAttempts { get; set; } = 3;
 
+    /// <summary>
+    /// Whether to look the merchant reference up before creating a payment, and refuse it with
+    /// <see cref="PaymentErrorCode.DuplicateReference"/> when an order already got past a failed try. Kashier itself accepts
+    /// the second session, then the customer's payment fails inside the payment page and no webhook is sent. Defaults to
+    /// <see langword="true"/>; it costs one read per payment.
+    /// </summary>
+    public bool CheckReferenceBeforeCreate { get; set; } = true;
+
     /// <summary>The payment API host this account calls.</summary>
     internal Uri ApiBaseUrl => WithTrailingSlash(BaseUrlOverride ?? (Environment == PaymentEnvironment.Live ? LiveApiBaseUrl : SandboxApiBaseUrl));
 
@@ -83,7 +91,8 @@ public sealed class KashierAccountOptions : PaymentAccountOptions
         builder.Append(", Display = ").Append(Display)
             .Append(", AllowedMethods = ").Append(AllowedMethods ?? "(dashboard)")
             .Append(", SessionLifetime = ").Append(SessionLifetime)
-            .Append(", MaxFailureAttempts = ").Append(MaxFailureAttempts);
+            .Append(", MaxFailureAttempts = ").Append(MaxFailureAttempts)
+            .Append(", CheckReferenceBeforeCreate = ").Append(CheckReferenceBeforeCreate);
     }
 
     private static Uri WithTrailingSlash(Uri url) =>

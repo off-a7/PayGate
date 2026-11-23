@@ -5,9 +5,17 @@ All notable changes to this project are documented here. The format follows [Kee
 ## [Unreleased]
 
 ### Added
-- `PayGate.Kashier` settings: `AddKashier(configure, accountName)` registers a Kashier account with `KashierAccountOptions` (merchant id, secret key, Payment API Key, optional transfer key, payment page defaults). They are validated when the app starts: the keys must be set, and a Kashier host must match the environment, so test keys can't be pointed at live hosts or the reverse. The payment gateway itself follows in the next batch.
+- `PayGate.Kashier` settings: `AddKashier(configure, accountName)` registers a Kashier account with `KashierAccountOptions` (merchant id, secret key, Payment API Key, optional transfer key, payment page defaults). They are validated when the app starts: the keys must be set, and a Kashier host must match the environment, so test keys can't be pointed at live hosts or the reverse.
+- `PayGate.Kashier` payments: `AddKashier` registers a gateway for hosted payment sessions.
+  - Create returns a redirect to Kashier's payment page.
+  - Lookups read the session's outcome, by session id or by merchant reference, with the amount, captured and refunded totals, card or wallet, the decline reason in English and Arabic, and `KashierPaymentData` (order id, fees, VAT, settlement).
+  - Partial, repeated and remainder refunds go to the right Kashier order.
+  - `IPaymentCancelFeature` voids a paid or authorized payment.
+  - `KashierPaymentOptions` sets the page language, failure tries, failure redirect and 3-D Secure per payment.
+  - A reference that already has a paid order is refused before creating, because Kashier would accept it and then fail the customer silently (`CheckReferenceBeforeCreate`, on by default).
+- `PayGate.Abstractions`: `PaymentCapabilities.RejectsDuplicateReference` says whether a reused merchant reference is always refused. It's set for the fake and not for Kashier.
 - `PayGate.Kashier` transport: one HTTP client per account serves both the API and FEP hosts, HTTP/1.1 is pinned, credentials are read per call, so a tenant store can supply them, and responses are read leniently.
-- [Kashier findings](docs/providers/kashier.md): what Kashier's sandbox actually does, recorded on 2026-11-22, with 21 sanitized fixtures re-signed with a dummy key under `tests/fixtures/kashier`.
+- [Kashier findings](docs/providers/kashier.md): what Kashier's sandbox actually does, recorded on 2026-11-22 and 2026-11-23, with 31 sanitized fixtures re-signed with a dummy key under `tests/fixtures/kashier`.
 
 ## [0.2.0-preview] - 2026-11-16
 
