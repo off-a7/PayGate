@@ -1,0 +1,92 @@
+{
+  "kind": "Webhook",
+  "label": "pay / SUCCESS",
+  "signingKey": "playground-fixture-key-not-a-secret",
+  "scheme": {
+    "key": "PaymentApiKey",
+    "order": "Sorted",
+    "encoding": "Rfc3986",
+    "excluded": "fields outside signatureKeys"
+  },
+  "schemeObserved": true,
+  "signatureProblem": null,
+  "headers": {
+    "x-kashier-signature": "3e61af7099f6914f381a57bf4137634bb57f0236dc627f365a9eb457dd12adcc"
+  },
+  "body": {
+    "platform": "kashier",
+    "event": "pay",
+    "data": {
+      "merchantOrderId": "PG-20261122213241-6882",
+      "kashierOrderId": "2f313bc3-6aa0-4f55-a2a9-8cbe604a812f",
+      "orderReference": "TEST-ORD-193540520",
+      "transactionId": "TX-00000000130",
+      "status": "SUCCESS",
+      "method": "wallet",
+      "creationDate": "2026-11-22T21:33:11.860Z",
+      "amount": 40,
+      "settlementInfo": {
+        "vat": "0.00",
+        "sellingRate": 0,
+        "sellingFlat": 0,
+        "totalSellingRate": "0.00",
+        "totalSellingFees": "0.00",
+        "settledAmount": "40.00"
+      },
+      "currency": "EGP",
+      "card": {
+        "merchant": {
+          "merchantRedirectURL": "https://playground.example/api/return"
+        },
+        "amount": 40,
+        "currency": "EGP"
+      },
+      "metaData": {
+        "playgroundRef": "PG-20261122213241-6882",
+        "source": "paygate-playground",
+        "kashier payment UI version": "V3",
+        "termsAndConditions": {
+          "ip": "0.0.0.0"
+        }
+      },
+      "sourceOfFunds": {
+        "type": "Wallet",
+        "walletInfo": {
+          "merchantReference": "TEST-ORD-41222",
+          "networkReference": "98006804-30c1-4c26-9d6c-da98a33875e6",
+          "paidThrough": "Tahweel",
+          "payScheme": "TestSchema",
+          "payerName": "Test Account",
+          "payerAccount": "01001001001"
+        }
+      },
+      "transactionResponseCode": "00",
+      "transactionResponseMessage": {
+        "ar": "\u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629",
+        "en": "Approved"
+      },
+      "channel": "online | e-commerce",
+      "merchantDetails": {
+        "storeName": "Test Store",
+        "merchantId": "MID-0000-000",
+        "isLive": false,
+        "sanitized": "the merchant\u0027s account details were removed"
+      },
+      "installmentPlan": {},
+      "signatureKeys": [
+        "amount",
+        "channel",
+        "currency",
+        "kashierOrderId",
+        "merchantOrderId",
+        "method",
+        "orderReference",
+        "status",
+        "transactionId",
+        "transactionResponseCode"
+      ]
+    }
+  },
+  "capturedAt": "2026-11-22T21:33:04.0851655\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

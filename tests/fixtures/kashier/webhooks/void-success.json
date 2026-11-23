@@ -1,0 +1,105 @@
+{
+  "kind": "Webhook",
+  "label": "void / SUCCESS",
+  "signingKey": "playground-fixture-key-not-a-secret",
+  "scheme": {
+    "key": "PaymentApiKey",
+    "order": "Sorted",
+    "encoding": "Rfc3986",
+    "excluded": "fields outside signatureKeys"
+  },
+  "schemeObserved": true,
+  "signatureProblem": null,
+  "headers": {
+    "x-kashier-signature": "1f4827aeb10b196994a2ef0dd261cf3922342538ef2d5f409a9fb75cbee8a90d"
+  },
+  "body": {
+    "platform": "kashier",
+    "event": "void",
+    "data": {
+      "merchantOrderId": "PG-20261122212627-3721",
+      "kashierOrderId": "69657349-06a0-423d-ac3e-4e775d49fa31",
+      "orderReference": "TEST-ORD-193540513",
+      "transactionId": "TX-00000000119",
+      "status": "SUCCESS",
+      "method": "card",
+      "creationDate": "2026-11-22T21:27:37.581Z",
+      "amount": 50,
+      "settlementInfo": {
+        "vat": "-0.70",
+        "sellingRate": 0,
+        "sellingFlat": 5,
+        "totalSellingRate": "0.00",
+        "totalSellingFees": "-5.00",
+        "settledAmount": "-44.30"
+      },
+      "currency": "EGP",
+      "card": {
+        "cardInfo": {
+          "cardHolderName": "Test Holder",
+          "cardBrand": "Mastercard",
+          "maskedCard": "511111******1118"
+        },
+        "merchant": {
+          "merchantRedirectURL": "https://playground.example/api/return"
+        },
+        "amount": 50,
+        "currency": "EGP"
+      },
+      "metaData": {
+        "playgroundRef": "PG-20261122212627-3721",
+        "source": "paygate-playground",
+        "kashier payment UI version": "V3",
+        "termsAndConditions": {
+          "ip": "0.0.0.0"
+        },
+        "kashier_user": {
+          "id": "user-sanitized",
+          "fullName": "Test User",
+          "email": "user@example.com",
+          "selectedMID": "MID-0000-000"
+        }
+      },
+      "sourceOfFunds": {
+        "cardInfo": {
+          "maskedCard": "511111******1118",
+          "extendedMaskedCard": "51111111****1118",
+          "cardBrand": "Mastercard",
+          "cardHolderName": "Test Holder",
+          "cardDataToken": "token-sanitized",
+          "ccvToken": "token-sanitized",
+          "expiryYear": "27",
+          "expiryMonth": "06",
+          "storedOnFile": "NOT_STORED",
+          "save": false
+        }
+      },
+      "transactionResponseCode": "00",
+      "transactionResponseMessage": {
+        "en": "Approved",
+        "ar": "\u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629"
+      },
+      "channel": "online | e-commerce",
+      "merchantDetails": {
+        "storeName": "Test Store",
+        "merchantId": "MID-0000-000",
+        "isLive": false,
+        "sanitized": "the merchant\u0027s account details were removed"
+      },
+      "signatureKeys": [
+        "amount",
+        "channel",
+        "currency",
+        "kashierOrderId",
+        "merchantOrderId",
+        "method",
+        "orderReference",
+        "status",
+        "transactionId",
+        "transactionResponseCode"
+      ]
+    }
+  },
+  "capturedAt": "2026-11-22T21:27:29.6181840\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

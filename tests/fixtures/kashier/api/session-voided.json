@@ -1,0 +1,187 @@
+{
+  "kind": "Outbound",
+  "label": "session-payment",
+  "method": "GET",
+  "path": "/v3/payment/sessions/6b035e0df1523df5868a61eb/payment",
+  "status": 200,
+  "error": null,
+  "request": null,
+  "response": {
+    "message": "success",
+    "data": {
+      "sessionId": "6b035e0df1523df5868a61eb",
+      "status": "VOIDED",
+      "createdAt": "2026-11-22T21:26:37.111Z",
+      "updatedAt": "2026-11-22T21:27:37.668Z",
+      "merchantId": "MID-0000-000",
+      "merchantOrderId": "PG-20261122212627-3721",
+      "amount": 50,
+      "currency": "EGP",
+      "method": "card",
+      "pcc": {
+        "rfs_due_after": 1
+      },
+      "provider": "mpgs",
+      "acquirer": "qnb",
+      "orderId": "69657349-06a0-423d-ac3e-4e775d49fa31",
+      "capturedAmount": 0,
+      "refundedAmount": 0,
+      "paymentChannel": "ONLINE",
+      "hasSuccessfulAuthorization": false,
+      "rfsDate": "NA",
+      "lastTransactionType": "void",
+      "issuerAuthorizationCode": "079719",
+      "merchantType": "PF",
+      "metaData": {
+        "playgroundRef": "PG-20261122212627-3721",
+        "source": "paygate-playground",
+        "kashier payment UI version": "V3",
+        "termsAndConditions": {
+          "ip": "0.0.0.0"
+        },
+        "kashier_user": {
+          "id": "user-sanitized",
+          "fullName": "Test User",
+          "email": "user@example.com",
+          "selectedMID": "MID-0000-000"
+        }
+      },
+      "fees": "-5.00",
+      "shopifyFees": "NA",
+      "vat": "-0.70",
+      "settlementAmount": "-44.30",
+      "sourceOfFunds": {
+        "maskedCard": "511111******1118",
+        "extendedMaskedCard": "51111111****1118",
+        "cardBrand": "Mastercard",
+        "cardHolderName": "Test Holder",
+        "cardDataToken": "token-sanitized",
+        "ccvToken": "token-sanitized",
+        "expiryYear": "27",
+        "expiryMonth": "06",
+        "storedOnFile": "NOT_STORED",
+        "save": false
+      },
+      "customer": {
+        "reference": "cust-PG-20261122212627-3721",
+        "email": "customer@example.com"
+      },
+      "posTerminal": {
+        "terminalId": "NA"
+      },
+      "targetTransactionId": "TX-00000000118",
+      "history": [
+        {
+          "orderId": "69657349-06a0-423d-ac3e-4e775d49fa31",
+          "method": "card",
+          "provider": "mpgs",
+          "status": "SUCCESS",
+          "date": "2026-11-22T21:27:36.672Z",
+          "transactionId": "TX-00000000119",
+          "operation": "void",
+          "amount": 50,
+          "transactionResponseCode": "00",
+          "transactionResponseMessage": {
+            "en": "Approved",
+            "ar": "\u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629"
+          },
+          "performedBy": {
+            "fullName": "Test User",
+            "userId": "user-sanitized",
+            "email": "user@example.com"
+          },
+          "sourceOfFunds": {
+            "maskedCard": "511111******1118",
+            "extendedMaskedCard": "51111111****1118",
+            "cardBrand": "Mastercard",
+            "cardHolderName": "Test Holder",
+            "cardDataToken": "token-sanitized",
+            "ccvToken": "token-sanitized",
+            "expiryYear": "27",
+            "expiryMonth": "06",
+            "storedOnFile": "NOT_STORED",
+            "save": false
+          }
+        },
+        {
+          "orderId": "69657349-06a0-423d-ac3e-4e775d49fa31",
+          "method": "card",
+          "provider": "mpgs",
+          "status": "SUCCESS",
+          "date": "2026-11-22T21:27:15.487Z",
+          "transactionId": "TX-00000000118",
+          "operation": "pay",
+          "amount": 50,
+          "transactionResponseCode": "00",
+          "transactionResponseMessage": {
+            "en": "Approved",
+            "ar": "\u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629"
+          },
+          "performedBy": {
+            "fullName": "Test User",
+            "userId": "user-sanitized",
+            "email": "user@example.com"
+          },
+          "sourceOfFunds": {
+            "maskedCard": "511111******1118",
+            "extendedMaskedCard": "51111111****1118",
+            "cardBrand": "Mastercard",
+            "cardHolderName": "Test Holder",
+            "cardDataToken": "token-sanitized",
+            "ccvToken": "token-sanitized",
+            "expiryYear": "27",
+            "expiryMonth": "06",
+            "storedOnFile": "NOT_STORED",
+            "save": false
+          }
+        },
+        {
+          "orderId": "69657349-06a0-423d-ac3e-4e775d49fa31",
+          "method": "card",
+          "provider": "mpgs",
+          "status": "SUCCESS",
+          "date": "2026-11-22T21:27:12.709Z",
+          "transactionId": "TX-00000000116",
+          "operation": "3ds",
+          "amount": 50,
+          "transactionResponseCode": "DECLINED",
+          "transactionResponseMessage": {
+            "en": "Payment was declined by issuer or payer authentication was not able to be successfully completed.",
+            "ar": "\u062A\u0645 \u0631\u0641\u0636 \u0627\u0644\u062F\u0641\u0639 \u0645\u0646 \u0642\u0628\u0644 \u0627\u0644\u0645\u064F\u0635\u062F\u0631 \u0623\u0648 \u0644\u0645 \u062A\u062A\u0645 \u0645\u0635\u0627\u062F\u0642\u0629 \u0627\u0644\u062F\u0627\u0641\u0639 \u0628\u0646\u062C\u0627\u062D."
+          },
+          "performedBy": {
+            "fullName": "Test User",
+            "userId": "user-sanitized",
+            "email": "user@example.com"
+          },
+          "sourceOfFunds": {
+            "maskedCard": "511111******1118",
+            "extendedMaskedCard": "51111111****1118",
+            "cardBrand": "Mastercard",
+            "cardHolderName": "Test Holder",
+            "cardDataToken": "token-sanitized",
+            "ccvToken": "token-sanitized",
+            "expiryYear": "27",
+            "expiryMonth": "06",
+            "storedOnFile": "NOT_STORED",
+            "save": false
+          }
+        },
+        {
+          "status": "PENDING",
+          "date": "2026-11-22T21:27:12.676Z"
+        },
+        {
+          "status": "OPENED",
+          "date": "2026-11-22T21:27:08.127Z"
+        },
+        {
+          "status": "CREATED",
+          "date": "2026-11-22T21:26:37.109Z"
+        }
+      ]
+    }
+  },
+  "capturedAt": "2026-11-23T08:01:52.1440079\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

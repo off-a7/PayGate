@@ -1,0 +1,137 @@
+{
+  "kind": "Outbound",
+  "label": "session-payment",
+  "method": "GET",
+  "path": "/v3/payment/sessions/6b035f82f1523df5868a67f3/payment",
+  "status": 200,
+  "error": null,
+  "request": null,
+  "response": {
+    "message": "success",
+    "data": {
+      "sessionId": "6b035f82f1523df5868a67f3",
+      "status": "PAID",
+      "createdAt": "2026-11-22T21:32:50.102Z",
+      "updatedAt": "2026-11-22T21:33:11.967Z",
+      "merchantId": "MID-0000-000",
+      "merchantOrderId": "PG-20261122213241-6882",
+      "amount": 40,
+      "currency": "EGP",
+      "method": "wallet",
+      "pcc": {
+        "rfs_due_after": 1
+      },
+      "provider": "upg",
+      "acquirer": "qnb",
+      "orderId": "2f313bc3-6aa0-4f55-a2a9-8cbe604a812f",
+      "capturedAmount": 40,
+      "refundedAmount": 0,
+      "paymentChannel": "ONLINE",
+      "hasSuccessfulAuthorization": false,
+      "rfsDate": "NA",
+      "lastTransactionType": "pay",
+      "issuerAuthorizationCode": "NA",
+      "merchantType": "PF",
+      "metaData": {
+        "playgroundRef": "PG-20261122213241-6882",
+        "source": "paygate-playground",
+        "kashier payment UI version": "V3",
+        "termsAndConditions": {
+          "ip": "0.0.0.0"
+        }
+      },
+      "fees": "0.00",
+      "shopifyFees": "NA",
+      "vat": "0.00",
+      "settlementAmount": "40.00",
+      "sourceOfFunds": {
+        "merchantReference": "TEST-ORD-41222",
+        "networkReference": "98006804-30c1-4c26-9d6c-da98a33875e6",
+        "paidThrough": "Tahweel",
+        "payScheme": "TestSchema",
+        "payerName": "Test Account",
+        "payerAccount": "01001001001"
+      },
+      "customer": {
+        "reference": "cust-PG-20261122213241-6882",
+        "email": "customer@example.com"
+      },
+      "posTerminal": {
+        "terminalId": "NA"
+      },
+      "targetTransactionId": "TX-00000000130",
+      "history": [
+        {
+          "orderId": "2f313bc3-6aa0-4f55-a2a9-8cbe604a812f",
+          "method": "wallet",
+          "provider": "upg",
+          "status": "SUCCESS",
+          "date": "2026-11-22T21:33:11.848Z",
+          "transactionId": "TX-00000000130",
+          "operation": "pay",
+          "amount": 40,
+          "transactionResponseCode": "00",
+          "transactionResponseMessage": {
+            "ar": "\u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629",
+            "en": "Approved"
+          },
+          "performedBy": {
+            "fullName": "Test User",
+            "userId": "user-sanitized",
+            "email": "user@example.com"
+          },
+          "sourceOfFunds": {
+            "merchantReference": "TEST-ORD-41222",
+            "networkReference": "98006804-30c1-4c26-9d6c-da98a33875e6",
+            "paidThrough": "Tahweel",
+            "payScheme": "TestSchema",
+            "payerName": "Test Account",
+            "payerAccount": "01001001001"
+          }
+        },
+        {
+          "orderId": "2f313bc3-6aa0-4f55-a2a9-8cbe604a812f",
+          "method": "wallet",
+          "provider": "upg",
+          "status": "FAILURE",
+          "date": "2026-11-22T21:32:56.156Z",
+          "transactionId": "TX-00000000129",
+          "operation": "initiate_r2p",
+          "amount": 40,
+          "transactionResponseCode": "k_default",
+          "transactionResponseMessage": {
+            "en": "A General Error Occured, please contact support.",
+            "ar": "\u062D\u062F\u062B \u062E\u0637\u0623 \u0639\u0627\u0645 \u060C \u064A\u0631\u062C\u0649 \u0627\u0644\u0627\u062A\u0635\u0627\u0644 \u0628\u0627\u0644\u062F\u0639\u0645."
+          },
+          "performedBy": {
+            "fullName": "Test User",
+            "userId": "user-sanitized",
+            "email": "user@example.com"
+          },
+          "sourceOfFunds": {
+            "merchantReference": "TEST-ORD-41222",
+            "networkReference": "98006804-30c1-4c26-9d6c-da98a33875e6",
+            "paidThrough": "Tahweel",
+            "payScheme": "TestSchema",
+            "payerName": "Test Account",
+            "payerAccount": "01001001001"
+          }
+        },
+        {
+          "status": "PENDING",
+          "date": "2026-11-22T21:32:56.114Z"
+        },
+        {
+          "status": "OPENED",
+          "date": "2026-11-22T21:32:52.236Z"
+        },
+        {
+          "status": "CREATED",
+          "date": "2026-11-22T21:32:50.100Z"
+        }
+      ]
+    }
+  },
+  "capturedAt": "2026-11-23T08:01:53.9553728\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

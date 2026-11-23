@@ -1,0 +1,21 @@
+{
+  "kind": "Outbound",
+  "label": "session-payment",
+  "method": "GET",
+  "path": "/v3/payment/sessions/000000000000000000000000/payment",
+  "status": 404,
+  "error": null,
+  "request": null,
+  "response": {
+    "error": {
+      "cause": "resource not found"
+    },
+    "messages": {
+      "en": "Payment session not found",
+      "ar": "Payment session not found"
+    },
+    "status": "FAILURE"
+  },
+  "capturedAt": "2026-11-23T08:01:54.3425168\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

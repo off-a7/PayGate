@@ -1,0 +1,22 @@
+{
+  "kind": "Outbound",
+  "label": "refund-partial",
+  "method": "PUT",
+  "path": "/v3/orders/52e8cf0f-05d0-49f8-be23-fd51153b2bb6",
+  "status": 401,
+  "error": null,
+  "request": {
+    "apiOperation": "REFUND",
+    "reason": "over refund",
+    "transaction": {
+      "amount": 1
+    }
+  },
+  "response": {
+    "error": "Authorization error",
+    "message": "Unauthorized",
+    "statusCode": 401
+  },
+  "capturedAt": "2026-11-22T21:21:15.8221912\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

@@ -1,0 +1,100 @@
+{
+  "kind": "Webhook",
+  "label": "pay / SUCCESS",
+  "signingKey": "playground-fixture-key-not-a-secret",
+  "scheme": {
+    "key": "PaymentApiKey",
+    "order": "Sorted",
+    "encoding": "Rfc3986",
+    "excluded": "fields outside signatureKeys"
+  },
+  "schemeObserved": true,
+  "signatureProblem": null,
+  "headers": {
+    "x-kashier-signature": "d9ec367b4257c7fc7400cd7b1327ba41827ea935c9aa485ce718bcc8bcf40047"
+  },
+  "body": {
+    "platform": "kashier",
+    "event": "pay",
+    "data": {
+      "merchantOrderId": "PG-20261122212816-7711",
+      "kashierOrderId": "f64e3069-7e07-4d11-8bca-6a877884b9b4",
+      "orderReference": "TEST-ORD-193540517",
+      "transactionId": "TX-00000000128",
+      "status": "SUCCESS",
+      "method": "card",
+      "creationDate": "2026-11-22T21:29:36.550Z",
+      "amount": 75.5,
+      "settlementInfo": {
+        "vat": "0.70",
+        "sellingRate": 0,
+        "sellingFlat": 5,
+        "totalSellingRate": "0.00",
+        "totalSellingFees": "5.00",
+        "settledAmount": "69.80"
+      },
+      "currency": "EGP",
+      "card": {
+        "cardInfo": {
+          "cardHolderName": "Test Holder",
+          "cardBrand": "Mastercard",
+          "maskedCard": "511111******1118"
+        },
+        "merchant": {
+          "merchantRedirectURL": "https://playground.example/api/return"
+        },
+        "amount": 75.5,
+        "currency": "EGP"
+      },
+      "metaData": {
+        "playgroundRef": "PG-20261122212816-7711",
+        "source": "paygate-playground",
+        "kashier payment UI version": "V3",
+        "termsAndConditions": {
+          "ip": "0.0.0.0"
+        }
+      },
+      "sourceOfFunds": {
+        "cardInfo": {
+          "maskedCard": "511111******1118",
+          "extendedMaskedCard": "51111111****1118",
+          "cardBrand": "Mastercard",
+          "cardHolderName": "Test Holder",
+          "cardDataToken": "token-sanitized",
+          "ccvToken": "token-sanitized",
+          "expiryYear": "27",
+          "expiryMonth": "06",
+          "storedOnFile": "NOT_STORED",
+          "save": false
+        }
+      },
+      "transactionResponseCode": "00",
+      "transactionResponseMessage": {
+        "en": "Approved",
+        "ar": "\u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629"
+      },
+      "channel": "online | e-commerce",
+      "merchantDetails": {
+        "storeName": "Test Store",
+        "merchantId": "MID-0000-000",
+        "isLive": false,
+        "sanitized": "the merchant\u0027s account details were removed"
+      },
+      "installmentPlan": {},
+      "signatureKeys": [
+        "amount",
+        "channel",
+        "currency",
+        "kashierOrderId",
+        "merchantOrderId",
+        "method",
+        "orderReference",
+        "status",
+        "transactionId",
+        "transactionResponseCode"
+      ]
+    }
+  },
+  "capturedAt": "2026-11-22T21:29:28.6512025\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

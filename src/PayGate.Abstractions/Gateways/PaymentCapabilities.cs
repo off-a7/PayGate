@@ -38,4 +38,11 @@ public sealed record PaymentCapabilities
 
     /// <summary>Whether <see cref="CreatePaymentRequest.Metadata"/> is echoed back in lookups and events.</summary>
     public bool MetadataPassthrough { get; init; }
+
+    /// <summary>
+    /// Whether a create that reuses a <see cref="CreatePaymentRequest.MerchantReference"/> is always refused with
+    /// <see cref="PaymentErrorCode.DuplicateReference"/>. When it is not set, a reused reference may be accepted, so use a new
+    /// merchant reference for every payment attempt.
+    /// </summary>
+    public bool RejectsDuplicateReference { get; init; }
 }
