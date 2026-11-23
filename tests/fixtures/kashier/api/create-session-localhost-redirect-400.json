@@ -1,0 +1,39 @@
+{
+  "kind": "Outbound",
+  "label": "create-session",
+  "method": "POST",
+  "path": "/v3/payment/sessions",
+  "status": 400,
+  "error": null,
+  "request": {
+    "merchantId": "MID-0000-000",
+    "order": "PG-20261122141131-3950",
+    "amount": "113.34",
+    "currency": "EGP",
+    "display": "en",
+    "type": "one-time",
+    "paymentType": "credit",
+    "allowedMethods": "card,wallet",
+    "maxFailureAttempts": 3,
+    "expireAt": "2026-11-22T14:41:31.847Z",
+    "merchantRedirect": "http://localhost:5090/api/return",
+    "failureRedirect": true,
+    "enable3DS": true,
+    "manualCapture": false,
+    "interactionSource": "ECOMMERCE",
+    "customer": {
+      "reference": "cust-PG-20261122141131-3950",
+      "email": "customer@example.com"
+    },
+    "metaData": {
+      "playgroundRef": "PG-20261122141131-3950",
+      "source": "paygate-playground"
+    },
+    "serverWebhook": "https://playground.example/api/webhooks/kashier"
+  },
+  "response": {
+    "message": "\u0022merchantRedirect\u0022 must be a valid URL"
+  },
+  "capturedAt": "2026-11-22T14:11:32.3029042\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

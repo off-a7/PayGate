@@ -1,0 +1,123 @@
+{
+  "kind": "Outbound",
+  "label": "refund-full",
+  "method": "PUT",
+  "path": "/v3/orders/52e8cf0f-05d0-49f8-be23-fd51153b2bb6",
+  "status": 200,
+  "error": null,
+  "request": {
+    "apiOperation": "REFUND",
+    "reason": "full remainder"
+  },
+  "response": {
+    "response": {
+      "apiOperation": "REFUND",
+      "operation": "refund",
+      "currency": "EGP",
+      "result": "SUCCESS",
+      "status": "REFUNDED",
+      "authorizationNumber": "080758",
+      "amount": 63.34,
+      "certainty": "FINAL",
+      "creationTime": "2026-11-22T14:15:44.845Z",
+      "lastUpdatedTime": "2026-11-22T21:21:10.469Z",
+      "merchantCurrency": "EGP",
+      "reference": "52e8cf0f-05d0-49f8-be23-fd51153b2bb6",
+      "totalAuthorizedAmount": 113.34,
+      "totalCapturedAmount": 113.34,
+      "totalDisbursedAmount": 0,
+      "totalRefundedAmount": 113.34,
+      "authentication": {},
+      "paymentMethod": {
+        "type": "card",
+        "card": {
+          "cardBrand": "Visa",
+          "number": "450875******1019",
+          "nameOnCard": "John Doe",
+          "expiry": {
+            "month": "06",
+            "year": "27"
+          }
+        }
+      },
+      "metaData": {
+        "playgroundRef": "PG-20261122141508-1791",
+        "source": "paygate-playground",
+        "kashier payment UI version": "V3",
+        "referral url": "http://localhost:4300/",
+        "termsAndConditions": {
+          "ip": "0.0.0.0"
+        },
+        "kashier_user": {
+          "id": "user-sanitized",
+          "fullName": "Test User",
+          "email": "user@example.com",
+          "selectedMID": "MID-0000-000"
+        }
+      },
+      "customer": {
+        "reference": "cust-PG-20261122141508-1791",
+        "email": "customer@example.com"
+      },
+      "branch": {
+        "name": "Branch Name",
+        "address": {
+          "street": "street",
+          "city": "branch city",
+          "country": "branch country",
+          "address": "Branch Address"
+        }
+      },
+      "reconciliation": {
+        "webhookUrl": "https://playground.example/api/webhooks/kashier",
+        "redirect": false
+      },
+      "merchantId": "MID-0000-000",
+      "order": {
+        "amount": 113.34,
+        "currency": "EGP",
+        "originalAmount": 113.34,
+        "callbackURL": "https://playground.example/api/return",
+        "systemOrderId": "52e8cf0f-05d0-49f8-be23-fd51153b2bb6",
+        "reference": "PG-20261122141508-1791"
+      },
+      "netAuthorizedAmount": "108.34",
+      "apiKeyId": "api-key-id-sanitized",
+      "method": "card",
+      "creationDate": "2026-11-22T16:15:37.576Z",
+      "orderId": "52e8cf0f-05d0-49f8-be23-fd51153b2bb6",
+      "provider": "mpgs",
+      "merchantOrderId": "PG-20261122141508-1791",
+      "orderReference": "TEST-ORD-193539861",
+      "interactionSource": "ECOMMERCE",
+      "device": {
+        "browserDetails": {
+          "javaEnabled": false,
+          "language": "en-US",
+          "screenHeight": 637,
+          "screenWidth": 1022,
+          "timeZone": -120,
+          "colorDepth": 24,
+          "3DSecureChallengeWindowSize": "390_X_400"
+        },
+        "browser": "Chrome",
+        "ipAddress": "0.0.0.0"
+      },
+      "transactionId": "TX-00000000113",
+      "sessionId": "6b02f8f4f1523df58688a759",
+      "transactionResponseCode": "00",
+      "transactionResponseMessage": {
+        "en": "Approved",
+        "ar": "\u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629"
+      }
+    },
+    "messages": {
+      "en": "Approved",
+      "ar": "\u062A\u0645\u062A \u0627\u0644\u0645\u0648\u0627\u0641\u0642\u0629"
+    },
+    "status": "SUCCESS",
+    "statusCode": 200
+  },
+  "capturedAt": "2026-11-22T21:21:02.3687508\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

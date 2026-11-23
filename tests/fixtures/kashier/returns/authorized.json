@@ -1,0 +1,65 @@
+{
+  "kind": "Return",
+  "label": "AUTHORIZED",
+  "signingKey": "playground-fixture-key-not-a-secret",
+  "scheme": {
+    "key": "PaymentApiKey",
+    "order": "DocsFixedList",
+    "encoding": "Decoded",
+    "excluded": "everything not in the list"
+  },
+  "schemeObserved": true,
+  "query": [
+    [
+      "paymentStatus",
+      "AUTHORIZED"
+    ],
+    [
+      "cardDataToken",
+      "token-sanitized"
+    ],
+    [
+      "maskedCard",
+      "450875******1019"
+    ],
+    [
+      "merchantOrderId",
+      "PG-20261122141508-1791"
+    ],
+    [
+      "orderId",
+      "52e8cf0f-05d0-49f8-be23-fd51153b2bb6"
+    ],
+    [
+      "cardBrand",
+      "Visa"
+    ],
+    [
+      "orderReference",
+      "TEST-ORD-193539861"
+    ],
+    [
+      "transactionId",
+      "TX-00000000109"
+    ],
+    [
+      "amount",
+      "113.34"
+    ],
+    [
+      "currency",
+      "EGP"
+    ],
+    [
+      "mode",
+      "test"
+    ],
+    [
+      "signature",
+      "3b1fe0c1b28f879f2b5a678f6611021f59049165102d66721a78035d222ef751"
+    ]
+  ],
+  "queryString": "?paymentStatus=AUTHORIZED\u0026cardDataToken=token-sanitized\u0026maskedCard=450875%2A%2A%2A%2A%2A%2A1019\u0026merchantOrderId=PG-20261122141508-1791\u0026orderId=52e8cf0f-05d0-49f8-be23-fd51153b2bb6\u0026cardBrand=Visa\u0026orderReference=TEST-ORD-193539861\u0026transactionId=TX-00000000109\u0026amount=113.34\u0026currency=EGP\u0026mode=test\u0026signature=3b1fe0c1b28f879f2b5a678f6611021f59049165102d66721a78035d222ef751",
+  "capturedAt": "2026-11-22T14:16:00.4338393\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

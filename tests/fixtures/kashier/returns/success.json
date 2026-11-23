@@ -1,0 +1,65 @@
+{
+  "kind": "Return",
+  "label": "SUCCESS",
+  "signingKey": "playground-fixture-key-not-a-secret",
+  "scheme": {
+    "key": "PaymentApiKey",
+    "order": "DocsFixedList",
+    "encoding": "Decoded",
+    "excluded": "everything not in the list"
+  },
+  "schemeObserved": true,
+  "query": [
+    [
+      "paymentStatus",
+      "SUCCESS"
+    ],
+    [
+      "cardDataToken",
+      "token-sanitized"
+    ],
+    [
+      "maskedCard",
+      "511111******1118"
+    ],
+    [
+      "merchantOrderId",
+      "PG-20261122212627-3721"
+    ],
+    [
+      "orderId",
+      "69657349-06a0-423d-ac3e-4e775d49fa31"
+    ],
+    [
+      "cardBrand",
+      "Mastercard"
+    ],
+    [
+      "orderReference",
+      "TEST-ORD-193540513"
+    ],
+    [
+      "transactionId",
+      "TX-00000000118"
+    ],
+    [
+      "amount",
+      "50"
+    ],
+    [
+      "currency",
+      "EGP"
+    ],
+    [
+      "mode",
+      "test"
+    ],
+    [
+      "signature",
+      "5bed2a1b9c9073049f1f91d5a537b03873f0f22df0fbb51230f552d1dfe6bdc9"
+    ]
+  ],
+  "queryString": "?paymentStatus=SUCCESS\u0026cardDataToken=token-sanitized\u0026maskedCard=511111%2A%2A%2A%2A%2A%2A1118\u0026merchantOrderId=PG-20261122212627-3721\u0026orderId=69657349-06a0-423d-ac3e-4e775d49fa31\u0026cardBrand=Mastercard\u0026orderReference=TEST-ORD-193540513\u0026transactionId=TX-00000000118\u0026amount=50\u0026currency=EGP\u0026mode=test\u0026signature=5bed2a1b9c9073049f1f91d5a537b03873f0f22df0fbb51230f552d1dfe6bdc9",
+  "capturedAt": "2026-11-22T21:27:13.6996195\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}

@@ -1,0 +1,91 @@
+{
+  "kind": "Outbound",
+  "label": "create-session",
+  "method": "POST",
+  "path": "/v3/payment/sessions",
+  "status": 200,
+  "error": null,
+  "request": {
+    "merchantId": "MID-0000-000",
+    "order": "PG-20261122212627-3721",
+    "amount": "50.00",
+    "currency": "EGP",
+    "display": "en",
+    "type": "one-time",
+    "paymentType": "credit",
+    "allowedMethods": "card,wallet",
+    "maxFailureAttempts": 3,
+    "expireAt": "2026-11-22T21:56:27.960Z",
+    "merchantRedirect": "https://playground.example/api/return",
+    "failureRedirect": true,
+    "enable3DS": true,
+    "manualCapture": false,
+    "interactionSource": "ECOMMERCE",
+    "customer": {
+      "reference": "cust-PG-20261122212627-3721",
+      "email": "customer@example.com"
+    },
+    "description": "void test",
+    "metaData": {
+      "playgroundRef": "PG-20261122212627-3721",
+      "source": "paygate-playground"
+    },
+    "serverWebhook": "https://playground.example/api/webhooks/kashier"
+  },
+  "response": {
+    "merchantId": "MID-0000-000",
+    "status": "CREATED",
+    "apiKey": "api-key-sanitized",
+    "expireAt": "2026-11-22T21:56:27.960Z",
+    "maxFailureAttempts": 3,
+    "failureAttempts": 0,
+    "capturedAmount": 0,
+    "refundedAmount": 0,
+    "paymentParams": {
+      "paymentType": "credit",
+      "amount": 50,
+      "originalAmount": 50,
+      "currency": "EGP",
+      "order": "PG-20261122212627-3721",
+      "merchantRedirect": "https://playground.example/api/return",
+      "immediateRedirect": false,
+      "display": "en",
+      "hash": "hash-sanitized",
+      "storeName": "Test Store",
+      "store": "Test Store",
+      "type": "one-time",
+      "allowedMethods": "card,wallet",
+      "metaData": {
+        "playgroundRef": "PG-20261122212627-3721",
+        "source": "paygate-playground"
+      },
+      "failureRedirect": true,
+      "description": "void test",
+      "manualCapture": false,
+      "customer": {
+        "reference": "cust-PG-20261122212627-3721",
+        "email": "customer@example.com"
+      },
+      "interactionSource": "ECOMMERCE",
+      "enable3DS": true,
+      "serverWebhook": "https://playground.example/api/webhooks/kashier",
+      "disableDiscount": false
+    },
+    "history": [
+      {
+        "status": "CREATED",
+        "date": "2026-11-22T21:26:37.109Z"
+      }
+    ],
+    "apmTraceId": "8e52d46d3a7fd8fc8121c8011b4a7064",
+    "createdBySystem": false,
+    "_id": "6b035e0df1523df5868a61eb",
+    "webhookNotifications": [],
+    "createdAt": "2026-11-22T21:26:37.111Z",
+    "updatedAt": "2026-11-22T21:26:37.111Z",
+    "__v": 0,
+    "sessionUrl": "https://payments.kashier.io/session/6b035e0df1523df5868a61eb?mode=test"
+  },
+  "capturedAt": "2026-11-22T21:26:28.7109963\u002B00:00",
+  "source": "Kashier test environment, captured by PayGate-Playground"
+}
