@@ -27,6 +27,29 @@ app.MapGet("/", (IPaymentGatewayResolver resolver) =>
     return $"PayGate consumer check: {WireFormat.ToDecimalString(amount)}, kashier registered: {hasKashier}";
 });
 
+app.MapPost("/kashier", async (IPaymentGatewayResolver resolver, CancellationToken cancellationToken) =>
+{
+    var kashier = resolver.GetGateway(new PaymentAccount(PaymentProviderId.Kashier));
+    var created = await kashier.CreatePaymentAsync(
+        new CreatePaymentRequest
+        {
+            MerchantReference = "consumer-check-kashier",
+            Amount = new Money(150m, Currency.Egp),
+            ReturnUrl = new Uri("https://shop.example/payments/return"),
+            ProviderOptions = new KashierPaymentOptions { Display = "ar", MaxFailureAttempts = 1 },
+        },
+        cancellationToken);
+    if (created.IsFailure)
+    {
+        return Results.Problem(created.Error.Message);
+    }
+
+    var details = await kashier.GetPaymentAsync(PaymentLookup.ByProviderPaymentId(created.Value.ProviderPaymentId), cancellationToken);
+    string? orderId = details.IsSuccess ? details.Value.GetProviderData<KashierPaymentData>()?.OrderId : null;
+    bool canCancel = kashier.TryGetFeature<IPaymentCancelFeature>(out _);
+    return Results.Ok(new { orderId, canCancel });
+});
+
 app.MapPost("/fake", async (FakePaymentGateway fake, IWebhookProcessor processor, CancellationToken cancellationToken) =>
 {
     var request = new CreatePaymentRequest { MerchantReference = "consumer-check", Amount = new Money(150m, Currency.Egp) };
