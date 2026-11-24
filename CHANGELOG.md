@@ -19,6 +19,8 @@ All notable changes to this project are documented here. The format follows [Kee
   - A redelivered webhook keeps its `EventId`, and one the app already has is answered 409.
   - Kashier doesn't sign the event name, so `ConfirmWithProvider` is on by default for Kashier accounts: each event's status is read back from Kashier before the app sees it.
   - Return callbacks are verified with Kashier's fixed-field scheme, and a tampered one claims no status.
+- `PayGate.Testing`: `KashierWebhookBuilder` builds Kashier payment webhooks (`Paid`, `Declined`, `Authorized`, `Captured`, `Refunded`, `Voided`, or any event through `Build`), shaped like the recorded ones and signed with the account's Payment API Key, so apps can test their handlers without Kashier.
+- [Kashier setup](docs/providers/kashier.md#setting-up-paygatekashier): keys, the webhook URL, handling events, the return page, testing without Kashier, and known quirks.
 - `PayGate.Abstractions`: `PaymentCapabilities.RejectsDuplicateReference` says whether a reused merchant reference is always refused. It's set for the fake and not for Kashier.
 - `PayGate.Kashier` transport: one HTTP client per account serves both the API and FEP hosts, HTTP/1.1 is pinned, credentials are read per call, so a tenant store can supply them, and responses are read leniently.
 - [Kashier findings](docs/providers/kashier.md): what Kashier's sandbox actually does, recorded on 2026-11-22 and 2026-11-23, with 31 sanitized fixtures re-signed with a dummy key under `tests/fixtures/kashier`.

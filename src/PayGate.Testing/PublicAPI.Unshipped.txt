@@ -1,1 +1,42 @@
 #nullable enable
+PayGate.Testing.KashierWebhook
+PayGate.Testing.KashierWebhook.<Clone>$() -> PayGate.Testing.KashierWebhook!
+PayGate.Testing.KashierWebhook.Amount.get -> PayGate.Money
+PayGate.Testing.KashierWebhook.Amount.init -> void
+PayGate.Testing.KashierWebhook.Equals(PayGate.Testing.KashierWebhook? other) -> bool
+PayGate.Testing.KashierWebhook.Event.get -> string!
+PayGate.Testing.KashierWebhook.Event.init -> void
+PayGate.Testing.KashierWebhook.KashierOrderId.get -> string?
+PayGate.Testing.KashierWebhook.KashierOrderId.init -> void
+PayGate.Testing.KashierWebhook.KashierWebhook() -> void
+PayGate.Testing.KashierWebhook.MerchantReference.get -> string!
+PayGate.Testing.KashierWebhook.MerchantReference.init -> void
+PayGate.Testing.KashierWebhook.Metadata.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>!
+PayGate.Testing.KashierWebhook.Metadata.init -> void
+PayGate.Testing.KashierWebhook.Method.get -> string!
+PayGate.Testing.KashierWebhook.Method.init -> void
+PayGate.Testing.KashierWebhook.OccurredAt.get -> System.DateTimeOffset?
+PayGate.Testing.KashierWebhook.OccurredAt.init -> void
+PayGate.Testing.KashierWebhook.OrderReference.get -> string?
+PayGate.Testing.KashierWebhook.OrderReference.init -> void
+PayGate.Testing.KashierWebhook.Status.get -> string!
+PayGate.Testing.KashierWebhook.Status.init -> void
+PayGate.Testing.KashierWebhook.TransactionId.get -> string?
+PayGate.Testing.KashierWebhook.TransactionId.init -> void
+PayGate.Testing.KashierWebhookBuilder
+PayGate.Testing.KashierWebhookBuilder.Account.get -> PayGate.PaymentAccount
+PayGate.Testing.KashierWebhookBuilder.Authorized(string! merchantReference, PayGate.Money amount) -> PayGate.Webhooks.WebhookRequest!
+PayGate.Testing.KashierWebhookBuilder.Build(PayGate.Testing.KashierWebhook! webhook) -> PayGate.Webhooks.WebhookRequest!
+PayGate.Testing.KashierWebhookBuilder.Captured(string! merchantReference, PayGate.Money amount) -> PayGate.Webhooks.WebhookRequest!
+PayGate.Testing.KashierWebhookBuilder.Declined(string! merchantReference, PayGate.Money amount) -> PayGate.Webhooks.WebhookRequest!
+PayGate.Testing.KashierWebhookBuilder.KashierWebhookBuilder(string! paymentApiKey, string! accountName = "default", System.TimeProvider? timeProvider = null) -> void
+PayGate.Testing.KashierWebhookBuilder.Paid(string! merchantReference, PayGate.Money amount) -> PayGate.Webhooks.WebhookRequest!
+PayGate.Testing.KashierWebhookBuilder.Refunded(string! merchantReference, PayGate.Money refundAmount) -> PayGate.Webhooks.WebhookRequest!
+PayGate.Testing.KashierWebhookBuilder.Voided(string! merchantReference, PayGate.Money amount) -> PayGate.Webhooks.WebhookRequest!
+const PayGate.Testing.KashierWebhookBuilder.SignatureHeader = "x-kashier-signature" -> string!
+override PayGate.Testing.KashierWebhook.Equals(object? obj) -> bool
+override PayGate.Testing.KashierWebhook.GetHashCode() -> int
+override PayGate.Testing.KashierWebhook.ToString() -> string!
+static PayGate.Testing.KashierWebhook.operator !=(PayGate.Testing.KashierWebhook? left, PayGate.Testing.KashierWebhook? right) -> bool
+static PayGate.Testing.KashierWebhook.operator ==(PayGate.Testing.KashierWebhook? left, PayGate.Testing.KashierWebhook? right) -> bool
+static PayGate.Testing.KashierWebhookBuilder.Tampered(PayGate.Webhooks.WebhookRequest! webhook) -> PayGate.Webhooks.WebhookRequest!
