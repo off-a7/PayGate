@@ -2,7 +2,6 @@
 
 using System.Net;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 using PayGate.Providers;
@@ -86,7 +85,13 @@ internal sealed class KashierApiClient(
         if (body is not null)
         {
             ArgumentNullException.ThrowIfNull(bodyType);
-            request.Content = JsonContent.Create(body, bodyType);
+
+            // Sent with a Content-Length. Kashier's FEP host never answers a chunked body (JsonContent streams one): the
+            // refund hangs until the timeout and is never made (recorded 2026-11-24).
+            request.Content = new ByteArrayContent(JsonSerializer.SerializeToUtf8Bytes(body, bodyType))
+            {
+                Headers = { ContentType = new MediaTypeHeaderValue("application/json") { CharSet = "utf-8" } },
+            };
         }
 
         var client = httpClientFactory.CreateClient(PaymentHttp.ClientName(Account));

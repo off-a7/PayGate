@@ -103,7 +103,8 @@ internal sealed record RecordedRequest(
     Version Version,
     HttpVersionPolicy VersionPolicy,
     IReadOnlyDictionary<string, string> Headers,
-    string? Body);
+    string? Body,
+    long? ContentLength);
 
 /// <summary>Records every request and plays back scripted answers in order, repeating the last one.</summary>
 internal sealed class RecordingHandler : HttpMessageHandler
@@ -131,8 +132,9 @@ internal sealed class RecordingHandler : HttpMessageHandler
         var headers = request.Headers
             .Concat(request.Content?.Headers ?? Enumerable.Empty<KeyValuePair<string, IEnumerable<string>>>())
             .ToDictionary(h => h.Key, h => string.Join(", ", h.Value), StringComparer.OrdinalIgnoreCase);
+        long? length = request.Content?.Headers.ContentLength;
         string? body = request.Content is null ? null : await request.Content.ReadAsStringAsync(cancellationToken);
-        Requests.Enqueue(new RecordedRequest(request.Method, request.RequestUri!, request.Version, request.VersionPolicy, headers, body));
+        Requests.Enqueue(new RecordedRequest(request.Method, request.RequestUri!, request.Version, request.VersionPolicy, headers, body, length));
 
         var step = _steps.Count > 0 ? _steps.Dequeue() : _last;
         _last = step;

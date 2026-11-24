@@ -20,6 +20,7 @@ var result = await provider.GetRequiredService<IWebhookProcessor>().ProcessAsync
 
 - **Flows:** `Redirect`, `ClientSdk` and `DisplayReference`.
 - **Outcomes:** `Succeed`, `Fail`, `Expire`, `ReportUnknownStatus`, partial refunds through `RefundAsync`, and `TimeOutNextWrite` for `OutcomeUnknown`.
+- **Kashier webhooks:** `new KashierWebhookBuilder(paymentApiKey).Paid("ORD-1", amount)` builds a webhook shaped and signed like Kashier's, so a handler can be tested against `PayGate.Kashier` without Kashier. There are also `Declined`, `Authorized`, `Captured`, `Refunded`, `Voided`, and `Build` for any event. `AddKashier` confirms each webhook with Kashier, so turn `ConfirmWithProvider` off for the account in such a test.
 - **Production:** the app fails to start in the Production environment unless `AllowInProduction` is set.
 
 Requires .NET 10 (`net10.0`).

@@ -1,1 +1,67 @@
 #nullable enable
+PayGate.Kashier.KashierAccountOptions
+PayGate.Kashier.KashierAccountOptions.AllowedMethods.get -> string?
+PayGate.Kashier.KashierAccountOptions.AllowedMethods.set -> void
+PayGate.Kashier.KashierAccountOptions.CheckReferenceBeforeCreate.get -> bool
+PayGate.Kashier.KashierAccountOptions.CheckReferenceBeforeCreate.set -> void
+PayGate.Kashier.KashierAccountOptions.Display.get -> string!
+PayGate.Kashier.KashierAccountOptions.Display.set -> void
+PayGate.Kashier.KashierAccountOptions.FepBaseUrlOverride.get -> System.Uri?
+PayGate.Kashier.KashierAccountOptions.FepBaseUrlOverride.set -> void
+PayGate.Kashier.KashierAccountOptions.KashierAccountOptions() -> void
+PayGate.Kashier.KashierAccountOptions.MaxFailureAttempts.get -> int
+PayGate.Kashier.KashierAccountOptions.MaxFailureAttempts.set -> void
+PayGate.Kashier.KashierAccountOptions.MerchantId.get -> string!
+PayGate.Kashier.KashierAccountOptions.MerchantId.set -> void
+PayGate.Kashier.KashierAccountOptions.PaymentApiKey.get -> string!
+PayGate.Kashier.KashierAccountOptions.PaymentApiKey.set -> void
+PayGate.Kashier.KashierAccountOptions.SecretKey.get -> string!
+PayGate.Kashier.KashierAccountOptions.SecretKey.set -> void
+PayGate.Kashier.KashierAccountOptions.SessionLifetime.get -> System.TimeSpan
+PayGate.Kashier.KashierAccountOptions.SessionLifetime.set -> void
+PayGate.Kashier.KashierAccountOptions.TransferApiKey.get -> string?
+PayGate.Kashier.KashierAccountOptions.TransferApiKey.set -> void
+PayGate.Kashier.KashierPayGateBuilderExtensions
+PayGate.Kashier.KashierPaymentData
+PayGate.Kashier.KashierPaymentData.<Clone>$() -> PayGate.Kashier.KashierPaymentData!
+PayGate.Kashier.KashierPaymentData.Equals(PayGate.Kashier.KashierPaymentData? other) -> bool
+PayGate.Kashier.KashierPaymentData.Fees.get -> decimal?
+PayGate.Kashier.KashierPaymentData.Fees.init -> void
+PayGate.Kashier.KashierPaymentData.KashierPaymentData() -> void
+PayGate.Kashier.KashierPaymentData.LastOperation.get -> string?
+PayGate.Kashier.KashierPaymentData.LastOperation.init -> void
+PayGate.Kashier.KashierPaymentData.OrderId.get -> string?
+PayGate.Kashier.KashierPaymentData.OrderId.init -> void
+PayGate.Kashier.KashierPaymentData.SettlementAmount.get -> decimal?
+PayGate.Kashier.KashierPaymentData.SettlementAmount.init -> void
+PayGate.Kashier.KashierPaymentData.Vat.get -> decimal?
+PayGate.Kashier.KashierPaymentData.Vat.init -> void
+PayGate.Kashier.KashierPaymentOptions
+PayGate.Kashier.KashierPaymentOptions.Display.get -> string?
+PayGate.Kashier.KashierPaymentOptions.Display.init -> void
+PayGate.Kashier.KashierPaymentOptions.Enable3DS.get -> bool?
+PayGate.Kashier.KashierPaymentOptions.Enable3DS.init -> void
+PayGate.Kashier.KashierPaymentOptions.Equals(PayGate.Kashier.KashierPaymentOptions? other) -> bool
+PayGate.Kashier.KashierPaymentOptions.FailureRedirect.get -> bool?
+PayGate.Kashier.KashierPaymentOptions.FailureRedirect.init -> void
+PayGate.Kashier.KashierPaymentOptions.KashierPaymentOptions() -> void
+PayGate.Kashier.KashierPaymentOptions.MaxFailureAttempts.get -> int?
+PayGate.Kashier.KashierPaymentOptions.MaxFailureAttempts.init -> void
+override PayGate.Kashier.KashierPaymentData.Equals(object? obj) -> bool
+override PayGate.Kashier.KashierPaymentData.GetHashCode() -> int
+override PayGate.Kashier.KashierPaymentData.ToString() -> string!
+override PayGate.Kashier.KashierPaymentOptions.<Clone>$() -> PayGate.Kashier.KashierPaymentOptions!
+override PayGate.Kashier.KashierPaymentOptions.Equals(object? obj) -> bool
+override PayGate.Kashier.KashierPaymentOptions.GetHashCode() -> int
+override PayGate.Kashier.KashierPaymentOptions.Provider.get -> PayGate.PaymentProviderId
+override PayGate.Kashier.KashierPaymentOptions.ToString() -> string!
+override sealed PayGate.Kashier.KashierPaymentOptions.Equals(PayGate.ProviderPaymentOptions? other) -> bool
+static PayGate.Kashier.KashierPayGateBuilderExtensions.AddKashier(this PayGate.PayGateBuilder! builder, System.Action<PayGate.Kashier.KashierAccountOptions!>! configure, string! accountName = "default") -> PayGate.PayGateBuilder!
+static PayGate.Kashier.KashierPaymentData.operator !=(PayGate.Kashier.KashierPaymentData? left, PayGate.Kashier.KashierPaymentData? right) -> bool
+static PayGate.Kashier.KashierPaymentData.operator ==(PayGate.Kashier.KashierPaymentData? left, PayGate.Kashier.KashierPaymentData? right) -> bool
+static PayGate.Kashier.KashierPaymentOptions.operator !=(PayGate.Kashier.KashierPaymentOptions? left, PayGate.Kashier.KashierPaymentOptions? right) -> bool
+static PayGate.Kashier.KashierPaymentOptions.operator ==(PayGate.Kashier.KashierPaymentOptions? left, PayGate.Kashier.KashierPaymentOptions? right) -> bool
+static readonly PayGate.Kashier.KashierAccountOptions.LiveApiBaseUrl -> System.Uri!
+static readonly PayGate.Kashier.KashierAccountOptions.LiveFepBaseUrl -> System.Uri!
+static readonly PayGate.Kashier.KashierAccountOptions.SandboxApiBaseUrl -> System.Uri!
+static readonly PayGate.Kashier.KashierAccountOptions.SandboxFepBaseUrl -> System.Uri!

@@ -87,6 +87,9 @@ internal sealed class SampleApp : WebApplicationFactory<Program>
     {
         builder.UseEnvironment(Environments.Development);
         builder.UseSetting("ConnectionStrings:Sample", $"Data Source={_database};Pooling=False");
+
+        // Set here so that a developer's user secrets (Payments:Account = kashier for a sandbox run) never reach Kashier.
+        builder.UseSetting("Payments:Account", "fake");
         builder.UseSetting("Payments:Reconciliation:Enabled", "false");
         builder.UseSetting("Payments:Reconciliation:PendingOlderThan", "00:00:00");
         builder.UseSetting("Payments:PublicBaseUrl", "https://shop.example.com/");

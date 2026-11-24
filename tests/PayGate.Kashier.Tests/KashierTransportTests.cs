@@ -52,6 +52,22 @@ public sealed class KashierTransportTests
     }
 
     [Fact]
+    public async Task Bodies_are_sent_with_a_length_because_the_fep_host_never_answers_a_chunked_one_Async()
+    {
+        using var harness = new KashierHarness();
+        harness.Handler.RespondWithFixture("refund-partial").RespondWithFixture("create-session");
+
+        await harness.OperateAsync(new KashierOrderOperationRequest { ApiOperation = "REFUND" });
+        await harness.CreateSessionAsync();
+
+        foreach (var request in harness.Handler.Requests)
+        {
+            request.ContentLength.ShouldBe(System.Text.Encoding.UTF8.GetByteCount(request.Body!));
+            request.Headers["Content-Type"].ShouldBe("application/json; charset=utf-8");
+        }
+    }
+
+    [Fact]
     public async Task A_live_account_calls_the_live_hosts_Async()
     {
         using var harness = new KashierHarness(o => o.Environment = PaymentEnvironment.Live);

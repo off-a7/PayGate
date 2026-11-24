@@ -15,7 +15,7 @@ The [sample app](../samples/README.md) does every step below with real tables an
 
 ```csharp
 builder.Services.AddPayGate()
-    .AddPayGateFake()                              // a provider package; Kashier's comes in 0.3.0-preview
+    .AddPayGateFake()                              // a provider package, such as .AddKashier(...)
     .AddEventHandler<PaymentWebhookHandler>()      // your code, resolved in a new scope per event
     .AddWebhookEndpoints(options =>
     {

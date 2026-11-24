@@ -54,7 +54,22 @@ public sealed class KashierGatewayTests
         body["description"]!.GetValue<string>().ShouldBe("Order 42");
         body["metaData"]!["orderId"]!.GetValue<string>().ShouldBe("42");
         body["customer"]!["email"]!.GetValue<string>().ShouldBe("mona@example.com");
+        body["customer"]!["reference"]!.GetValue<string>().ShouldBe("ORD-42", "Kashier requires a customer reference; the merchant reference stands in");
         body.ContainsKey("failureRedirect").ShouldBeFalse();
+    }
+
+    [Theory]
+    [InlineData(null, "ORD-42")]
+    [InlineData(" ", "ORD-42")]
+    [InlineData("cust-7", "cust-7")]
+    public async Task Every_session_carries_the_customer_reference_kashier_requires_Async(string? reference, string expected)
+    {
+        using var harness = Harness();
+        harness.Handler.Respond(200, _noOrders).RespondWithFixture("create-session");
+
+        await harness.Gateway.CreatePaymentAsync(Request() with { Customer = reference is null ? null : new Customer { Reference = reference } }, Token);
+
+        SentBody(harness, 1)["customer"]!["reference"]!.GetValue<string>().ShouldBe(expected);
     }
 
     [Fact]

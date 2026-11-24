@@ -5,6 +5,11 @@
     payment attempts and webhook inbox in its own database, and PayGate stores nothing.
   -->
 
+  <PropertyGroup>
+    <!-- Kashier's sandbox keys go here with dotnet user-secrets, never into appsettings.json. -->
+    <UserSecretsId>paygate-sample-webapi</UserSecretsId>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\PayGate.AspNetCore\PayGate.AspNetCore.csproj" />
     <ProjectReference Include="..\..\src\PayGate.Kashier\PayGate.Kashier.csproj" />

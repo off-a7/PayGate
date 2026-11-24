@@ -2,7 +2,7 @@
 
 ## PayGate.Sample.WebApi
 
-A small shop API that takes payments through PayGate. It runs on the **fake gateway** now, and moves to the Kashier sandbox by changing configuration in Phase 3. It shows the part every app has to write itself: its own tables, deduping webhooks, checking amounts, fulfilling once, refunds and reconciliation.
+A small shop API that takes payments through PayGate. It runs on the **fake gateway** by default, and on the Kashier sandbox by changing configuration. It shows the part every app has to write itself: its own tables, deduping webhooks, checking amounts, fulfilling once, refunds and reconciliation.
 
 ### Run it
 
@@ -35,6 +35,22 @@ curl -X POST $B/orders/1/refunds -H 'content-type: application/json' -d '{}'
 
 The dev endpoints also offer `/fail` and `/expire`. Delete `paygate-sample.db` to start over.
 
+### Run it on the Kashier sandbox
+
+The same app takes real sandbox payments when `Payments:Account` is `kashier`. Kashier refuses `localhost`, so the app needs a public HTTPS address, such as an ngrok or dev tunnel to port 5080.
+
+```powershell
+cd samples/PayGate.Sample.WebApi
+dotnet user-secrets set "Payments:Kashier:MerchantId" "MID-..."
+dotnet user-secrets set "Payments:Kashier:SecretKey" "..."
+dotnet user-secrets set "Payments:Kashier:PaymentApiKey" "..."
+dotnet user-secrets set "Payments:Account" "kashier"
+dotnet user-secrets set "Payments:PublicBaseUrl" "https://<your-tunnel>/"
+dotnet run
+```
+
+Checkout then answers with Kashier's payment page. Kashier sends the webhook to `/webhooks/kashier` and the customer back to `/payments/return`. The `/dev/fake` endpoints are not mapped, and refunds go to Kashier.
+
 ### Endpoints
 
 | Endpoint | What it does |
@@ -66,7 +82,7 @@ Every status the app learns (webhook, return page, refund, reconciliation) goes 
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `Payments:Account` | `fake` | The PayGate account checkouts use. Phase 3 adds `kashier` |
+| `Payments:Account` | `fake` | The PayGate account checkouts use: `fake` or `kashier` |
 | `Payments:PublicBaseUrl` | `http://localhost:5080/` | Base of the return and webhook URLs. Use your tunnel's address to receive real webhooks |
 | `Payments:ConfirmWithProvider` | `true` | Ask the provider about each webhook's payment before handling it |
 | `Payments:AllowedReturnUrls` | empty | Absolute addresses `next` may point to, besides local paths |

@@ -103,9 +103,13 @@ internal sealed partial class KashierPaymentGateway(
             ServerWebhook = request.NotificationUrl?.AbsoluteUri,
             Description = request.Description,
             InteractionSource = "ECOMMERCE",
-            Customer = request.Customer is { } customer && (customer.Reference is not null || customer.Email is not null)
-                ? new KashierCustomer { Reference = customer.Reference, Email = customer.Email }
-                : null,
+            // Kashier refuses a session without customer.reference (recorded 2026-11-24). Without one from the app, the
+            // merchant reference stands in: PayGate saves no cards, so the customer id only labels the payment.
+            Customer = new KashierCustomer
+            {
+                Reference = string.IsNullOrWhiteSpace(request.Customer?.Reference) ? request.MerchantReference : request.Customer.Reference,
+                Email = request.Customer?.Email,
+            },
             MetaData = request.Metadata.Count > 0 ? request.Metadata : null,
         };
 
