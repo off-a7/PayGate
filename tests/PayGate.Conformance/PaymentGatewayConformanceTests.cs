@@ -119,8 +119,10 @@ public abstract class PaymentGatewayConformanceTests
     [Fact]
     public async Task Lookup_by_merchant_reference_follows_the_capability_Async()
     {
+        // Paid first: the lookup exists to reconcile a payment, and some providers (Kashier) only find one the customer tried to pay.
         var request = Request();
         var session = await CreateAsync(request);
+        await MakePaidAsync(session);
 
         var result = await Gateway.GetPaymentAsync(PaymentLookup.ByMerchantReference(request.MerchantReference), Token);
 
@@ -173,12 +175,26 @@ public abstract class PaymentGatewayConformanceTests
     [Fact]
     public async Task A_signed_webhook_is_verified_Async()
     {
-        var session = await PaidSessionAsync();
+        var request = Request();
+        var session = await CreateAsync(request);
+        await MakePaidAsync(session);
 
         var parsed = await Verifier.VerifyAndParseAsync(await SignedWebhookAsync(session), Token);
 
         Assert.Equal(WebhookParseKind.Verified, parsed.Kind);
-        Assert.Equal(session.ProviderPaymentId, Assert.Single(parsed.Events).ProviderPaymentId);
+        var paymentEvent = Assert.Single(parsed.Events);
+
+        // A provider whose webhooks don't carry the provider payment id (Kashier) must carry the merchant reference, which
+        // confirming with the provider looks the payment up by.
+        if (paymentEvent.ProviderPaymentId is null)
+        {
+            Assert.True(Gateway.Capabilities.LookupByMerchantReference, "An event without a provider payment id needs lookup by merchant reference.");
+            Assert.Equal(request.MerchantReference, paymentEvent.MerchantReference);
+        }
+        else
+        {
+            Assert.Equal(session.ProviderPaymentId, paymentEvent.ProviderPaymentId);
+        }
     }
 
     [Fact]
@@ -239,6 +255,7 @@ public abstract class PaymentGatewayConformanceTests
         MerchantReference = $"conformance-{Guid.NewGuid():N}",
         Amount = PaymentAmount,
         Description = "Conformance test",
+        ReturnUrl = new Uri("https://shop.example/payments/return"),
     };
 
     private async Task<PaymentSession> CreateAsync(CreatePaymentRequest? request = null)
