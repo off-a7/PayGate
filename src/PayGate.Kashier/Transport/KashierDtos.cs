@@ -56,7 +56,8 @@ internal sealed class KashierSessionRequest
 
 internal sealed class KashierCustomer
 {
-    public string? Reference { get; init; }
+    /// <summary>Required by Kashier: a session without it is refused with 400 <c>"customer.reference" is required</c>.</summary>
+    public required string Reference { get; init; }
 
     public string? Email { get; init; }
 }
