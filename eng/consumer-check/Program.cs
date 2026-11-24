@@ -50,6 +50,12 @@ app.MapPost("/kashier", async (IPaymentGatewayResolver resolver, CancellationTok
     return Results.Ok(new { orderId, canCancel });
 });
 
+app.MapGet("/kashier/return", async (HttpRequest request, IPayGateReturnCallbacks returns, CancellationToken cancellationToken) =>
+{
+    var claim = await returns.ParseAsync(request, new PaymentAccount(PaymentProviderId.Kashier), cancellationToken);
+    return Results.Ok(new { claim.Verification, claim.MerchantReference, claim.IndicatedStatus });
+});
+
 app.MapPost("/fake", async (FakePaymentGateway fake, IWebhookProcessor processor, CancellationToken cancellationToken) =>
 {
     var request = new CreatePaymentRequest { MerchantReference = "consumer-check", Amount = new Money(150m, Currency.Egp) };

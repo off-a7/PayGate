@@ -6,10 +6,13 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using PayGate.Kashier.Transport;
 
-/// <summary>An app with one Kashier account, registered for real, whose HTTP client talks to a recording handler.</summary>
+/// <summary>An app with one Kashier account, registered for real, whose HTTP client talks to a recording handler or a given stand-in.</summary>
 internal sealed class KashierHarness : IDisposable
 {
-    public KashierHarness(Action<KashierAccountOptions>? configure = null, Action<IServiceCollection>? services = null)
+    public KashierHarness(
+        Action<KashierAccountOptions>? configure = null,
+        Action<IServiceCollection>? services = null,
+        HttpMessageHandler? kashier = null)
     {
         var collection = new ServiceCollection();
         collection.AddLogging();
@@ -20,7 +23,7 @@ internal sealed class KashierHarness : IDisposable
             options.PaymentApiKey = "payment-api-key-value";
             configure?.Invoke(options);
         });
-        builder.ConfigureHttpClient(Account, client => client.ConfigurePrimaryHttpMessageHandler(() => Handler));
+        builder.ConfigureHttpClient(Account, client => client.ConfigurePrimaryHttpMessageHandler(() => kashier ?? Handler));
         builder.ConfigureHttpOptions(Account, o =>
         {
             o.ReadAttemptTimeout = TimeSpan.FromMilliseconds(300);

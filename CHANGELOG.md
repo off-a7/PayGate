@@ -13,6 +13,12 @@ All notable changes to this project are documented here. The format follows [Kee
   - `IPaymentCancelFeature` voids a paid or authorized payment.
   - `KashierPaymentOptions` sets the page language, failure tries, failure redirect and 3-D Secure per payment.
   - A reference that already has a paid order is refused before creating, because Kashier would accept it and then fail the customer silently (`CheckReferenceBeforeCreate`, on by default).
+- `PayGate.Kashier` webhooks and redirects: `AddKashier` also registers a webhook verifier, a return parser and an ack policy.
+  - Webhooks are checked against `x-kashier-signature` and fail closed: no `signatureKeys`, a listed field missing or `null`, or an unsigned amount, currency, reference, status or transaction id is refused.
+  - The event decides the kind and the status decides the outcome, so a successful refund never reads as a payment. A refund carries its own amount.
+  - A redelivered webhook keeps its `EventId`, and one the app already has is answered 409.
+  - Kashier doesn't sign the event name, so `ConfirmWithProvider` is on by default for Kashier accounts: each event's status is read back from Kashier before the app sees it.
+  - Return callbacks are verified with Kashier's fixed-field scheme, and a tampered one claims no status.
 - `PayGate.Abstractions`: `PaymentCapabilities.RejectsDuplicateReference` says whether a reused merchant reference is always refused. It's set for the fake and not for Kashier.
 - `PayGate.Kashier` transport: one HTTP client per account serves both the API and FEP hosts, HTTP/1.1 is pinned, credentials are read per call, so a tenant store can supply them, and responses are read leniently.
 - [Kashier findings](docs/providers/kashier.md): what Kashier's sandbox actually does, recorded on 2026-11-22 and 2026-11-23, with 31 sanitized fixtures re-signed with a dummy key under `tests/fixtures/kashier`.
