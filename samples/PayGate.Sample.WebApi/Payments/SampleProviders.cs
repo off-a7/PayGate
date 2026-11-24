@@ -1,5 +1,6 @@
 ﻿namespace PayGate.Sample.WebApi.Payments;
 
+using PayGate.Kashier;
 using PayGate.Testing;
 
 /// <summary>Registers the provider named by <c>Payments:Account</c>. The rest of the app does not know which one it is.</summary>
@@ -16,7 +17,12 @@ public static class SampleProviders
             return paygate.AddPayGateFake(options => configuration.GetSection("Payments:Fake").Bind(options), account.Name);
         }
 
-        // Phase 3 adds Kashier here, read from Payments:Kashier.
-        throw new InvalidOperationException($"The sample cannot use provider '{account.Provider}' yet. Set Payments:Account to 'fake'.");
+        if (account.Provider == PaymentProviderId.Kashier)
+        {
+            // Payments:Kashier holds the merchant id and environment; the keys come from user secrets or the environment.
+            return paygate.AddKashier(options => configuration.GetSection("Payments:Kashier").Bind(options), account.Name);
+        }
+
+        throw new InvalidOperationException($"The sample cannot use provider '{account.Provider}'. Set Payments:Account to 'fake' or 'kashier'.");
     }
 }

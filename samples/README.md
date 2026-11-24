@@ -35,6 +35,22 @@ curl -X POST $B/orders/1/refunds -H 'content-type: application/json' -d '{}'
 
 The dev endpoints also offer `/fail` and `/expire`. Delete `paygate-sample.db` to start over.
 
+### Run it on the Kashier sandbox
+
+The same app takes real sandbox payments when `Payments:Account` is `kashier`. Kashier refuses `localhost`, so the app needs a public HTTPS address, such as an ngrok or dev tunnel to port 5080.
+
+```powershell
+cd samples/PayGate.Sample.WebApi
+dotnet user-secrets set "Payments:Kashier:MerchantId" "MID-..."
+dotnet user-secrets set "Payments:Kashier:SecretKey" "..."
+dotnet user-secrets set "Payments:Kashier:PaymentApiKey" "..."
+dotnet user-secrets set "Payments:Account" "kashier"
+dotnet user-secrets set "Payments:PublicBaseUrl" "https://<your-tunnel>/"
+dotnet run
+```
+
+Checkout then answers with Kashier's payment page. Kashier sends the webhook to `/webhooks/kashier` and the customer back to `/payments/return`. The `/dev/fake` endpoints are not mapped, and refunds go to Kashier.
+
 ### Endpoints
 
 | Endpoint | What it does |
