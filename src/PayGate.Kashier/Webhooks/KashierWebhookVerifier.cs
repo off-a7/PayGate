@@ -74,23 +74,26 @@ internal sealed partial class KashierWebhookVerifier(
     /// What an event and its status report. <c>event</c> says what happened and <c>status</c> whether it worked, so a refund
     /// reporting SUCCESS never reads as a payment. <see langword="null"/> means nothing changed that an app acts on.
     /// </summary>
-    internal static (PaymentEventType Type, PaymentStatus Status)? Classify(string eventName, string status) => (eventName, status) switch
-    {
-        ("pay" or "capture", "SUCCESS") => (PaymentEventType.PaymentSucceeded, PaymentStatus.Succeeded),
-        ("pay" or "authorize", "FAILURE") => (PaymentEventType.PaymentFailed, PaymentStatus.Failed),
-        ("pay" or "authorize", "PENDING") => (PaymentEventType.PaymentPending, PaymentStatus.Pending),
-        ("authorize", "SUCCESS") => (PaymentEventType.PaymentAuthorized, PaymentStatus.Authorized),
-        ("void" or "reversal", "SUCCESS") => (PaymentEventType.PaymentCanceled, PaymentStatus.Canceled),
-        ("reject", "SUCCESS" or "FAILURE") => (PaymentEventType.PaymentFailed, PaymentStatus.Failed),
+    internal static (PaymentEventType Type, PaymentStatus Status)? Classify(string eventName, string status) =>
+        (eventName, KashierMapping.Status(status)) switch
+        {
+            // The status goes through the same table as lookups, so FAILED (the redirect's spelling) reads as FAILURE.
+            ("pay" or "capture", PaymentStatus.Succeeded) => (PaymentEventType.PaymentSucceeded, PaymentStatus.Succeeded),
+            ("pay" or "authorize", PaymentStatus.Failed) => (PaymentEventType.PaymentFailed, PaymentStatus.Failed),
+            ("pay" or "authorize", PaymentStatus.Pending) => (PaymentEventType.PaymentPending, PaymentStatus.Pending),
+            ("pay", PaymentStatus.Canceled) => (PaymentEventType.PaymentCanceled, PaymentStatus.Canceled),
+            ("authorize", PaymentStatus.Succeeded or PaymentStatus.Authorized) => (PaymentEventType.PaymentAuthorized, PaymentStatus.Authorized),
+            ("void" or "reversal", PaymentStatus.Succeeded) => (PaymentEventType.PaymentCanceled, PaymentStatus.Canceled),
+            ("reject", PaymentStatus.Succeeded or PaymentStatus.Failed) => (PaymentEventType.PaymentFailed, PaymentStatus.Failed),
 
-        // The webhook carries only this refund, so the status is the least it can be. ConfirmWithProvider replaces it with
-        // Kashier's own, which tells a full refund from a partial one.
-        ("refund" or "partial_refund", "SUCCESS") => (PaymentEventType.RefundSucceeded, PaymentStatus.PartiallyRefunded),
+            // The webhook carries only this refund, so the status is the least it can be. ConfirmWithProvider replaces it with
+            // Kashier's own, which tells a full refund from a partial one.
+            ("refund" or "partial_refund", PaymentStatus.Succeeded) => (PaymentEventType.RefundSucceeded, PaymentStatus.PartiallyRefunded),
 
-        // A refund that failed leaves the payment as it was, which the webhook doesn't say.
-        ("refund" or "partial_refund", "FAILURE") => (PaymentEventType.RefundFailed, PaymentStatus.Unknown),
-        _ => null,
-    };
+            // A refund that failed leaves the payment as it was, which the webhook doesn't say.
+            ("refund" or "partial_refund", PaymentStatus.Failed) => (PaymentEventType.RefundFailed, PaymentStatus.Unknown),
+            _ => null,
+        };
 
     /// <summary>A stable id: Kashier has none, and each operation has its own transaction id.</summary>
     internal static string EventId(string transactionId, string eventName, string status)
@@ -137,7 +140,7 @@ internal sealed partial class KashierWebhookVerifier(
 
         if (Classify(eventName, status) is not { } kind)
         {
-            if (!IsKnownEvent(eventName) || status is not ("SUCCESS" or "FAILURE" or "PENDING"))
+            if (!IsKnownEvent(eventName) || KashierMapping.Status(status) == PaymentStatus.Unknown)
             {
                 LogUnknownEvent(request.Account.ToString(), eventName, status);
             }

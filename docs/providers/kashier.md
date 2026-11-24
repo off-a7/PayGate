@@ -201,8 +201,9 @@ The `transaction` object is optional and holds `amount` and `targetTransactionId
   - a listed field that is absent or `null`
   - a `signatureKeys` that leaves out one of the fields PayGate acts on: `amount`, `currency`, `merchantOrderId`, `status` or `transactionId`
 - `event` decides the kind and `status` decides the outcome. A refund reporting `SUCCESS` is a `RefundSucceeded`, never a payment.
+  - `status` is read through the same table as lookups, so `FAILED` (the redirect spelling) counts as `FAILURE`, and `CAPTURED`, `CANCELLED`, `INITIATED` and `AUTHENTICATION_IN_PROGRESS` are understood too.
   - `pay` / `capture` + `SUCCESS` give `PaymentSucceeded`; `authorize` gives `PaymentAuthorized`.
-  - `void` / `reversal` give `PaymentCanceled`; `reject` gives `PaymentFailed`.
+  - `void` / `reversal` give `PaymentCanceled`, as does `pay` + `CANCELLED`; `reject` gives `PaymentFailed`.
   - `refund` / `partial_refund` give `RefundSucceeded` with `RefundAmount`, or `RefundFailed`.
   - A failed capture or void, `idempotency`, and unknown events are acknowledged and ignored. An unknown event or status is logged (warning 3101).
 - `EventId` is a hash of `transactionId`, `event` and `status`, so a redelivery has the same id and each refund on an order has its own.
