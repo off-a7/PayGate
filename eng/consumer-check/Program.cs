@@ -56,6 +56,14 @@ app.MapGet("/kashier/return", async (HttpRequest request, IPayGateReturnCallback
     return Results.Ok(new { claim.Verification, claim.MerchantReference, claim.IndicatedStatus });
 });
 
+app.MapPost("/kashier/webhook", async (IConfiguration configuration, IWebhookProcessor processor, CancellationToken cancellationToken) =>
+{
+    var builder = new KashierWebhookBuilder(configuration["Payments:Kashier:PaymentApiKey"] ?? "not-configured");
+    var webhook = builder.Build(new KashierWebhook { Event = "pay", MerchantReference = "consumer-check-kashier", Amount = new Money(150m, Currency.Egp) });
+    var result = await processor.ProcessAsync(webhook, cancellationToken);
+    return Results.StatusCode(result.Ack.StatusCode);
+});
+
 app.MapPost("/fake", async (FakePaymentGateway fake, IWebhookProcessor processor, CancellationToken cancellationToken) =>
 {
     var request = new CreatePaymentRequest { MerchantReference = "consumer-check", Amount = new Money(150m, Currency.Egp) };
