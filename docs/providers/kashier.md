@@ -1,6 +1,6 @@
 # Kashier
 
-> **Status:** these are the sandbox findings that `PayGate.Kashier` is built on (Phase 3 spike, items P3-01 to P3-06). Setup and usage instructions will be added when the package ships in `0.3.0-preview`.
+> **Status:** these are the sandbox findings that `PayGate.Kashier` is built on (Phase 3 spike, items P3-01 to P3-06), and how the package applies them. Setup and usage instructions will be added when the package ships in `0.3.0-preview`.
 
 The rules below were seen in Kashier's **test** environment on **2026-11-22** and **2026-11-23**. Each one is checked against both the developer docs (developers.kashier.io, read the same day) and recorded traffic. The traffic is in [tests/fixtures/kashier](../../tests/fixtures/kashier/README.md), sanitized and re-signed with a dummy key. Where the docs and the traffic disagree, the traffic wins, and the table at the end lists the differences.
 
@@ -122,6 +122,32 @@ The `transaction` object is optional and holds `amount` and `targetTransactionId
 - A declined card sends `pay` / `FAILURE` with `transactionResponseCode` (`AA` = unspecified failure) and a bilingual `transactionResponseMessage`.
 - Each operation has its own `transactionId`, so `transactionId + event + status` identifies an event.
 - Kashier accepts 200 or 409 as an acknowledgement, and retries other answers at 2 min, 10 min, 30 min, 1 h, 2 h and 4 h, then every 4 h, up to 10 times (docs).
+- **The event name is not signed.** `event` sits outside `data`, and `signatureKeys` only lists fields of `data`. A recorded webhook can be replayed with another `event` (`authorize` → `pay`, `pay` → `refund`) and still verify.
+- `signatureKeys` travels in the body, so it decides what the signature covers.
+- Values were only seen with characters that every encoder writes the same way. Whether Kashier encodes `! ' ( ) *` (RFC 3986 does, JavaScript's `encodeURIComponent` doesn't) is not known. Keep merchant references to letters, digits and `- _ .`.
+
+### What PayGate does with a webhook
+- Fails closed. These are all rejected as `InvalidSignature` (401):
+  - a missing `x-kashier-signature` header
+  - a missing or empty `signatureKeys`
+  - a listed field that is absent or `null`
+  - a `signatureKeys` that leaves out one of the fields PayGate acts on: `amount`, `currency`, `merchantOrderId`, `status` or `transactionId`
+- `event` decides the kind and `status` decides the outcome. A refund reporting `SUCCESS` is a `RefundSucceeded`, never a payment.
+  - `pay` / `capture` + `SUCCESS` give `PaymentSucceeded`; `authorize` gives `PaymentAuthorized`.
+  - `void` / `reversal` give `PaymentCanceled`; `reject` gives `PaymentFailed`.
+  - `refund` / `partial_refund` give `RefundSucceeded` with `RefundAmount`, or `RefundFailed`.
+  - A failed capture or void, `idempotency`, and unknown events are acknowledged and ignored. An unknown event or status is logged (warning 3101).
+- `EventId` is a hash of `transactionId`, `event` and `status`, so a redelivery has the same id and each refund on an order has its own.
+- `OccurredAt` is `data.creationDate`, which is the time of the operation, not of the order.
+- `ProviderPaymentId` is empty because the webhook names the order, not the session.
+- `RawPayload` is never set, because the body carries the Payment API Key.
+- `Metadata` keeps the string values of `metaData`.
+- **`AddKashier` turns `ConfirmWithProvider` on**, because the event name is unsigned:
+  - each event's status, amount and refunded total are read back from Kashier (by merchant reference) before the app sees it
+  - `ProviderPaymentId` is filled in with the session id
+  - the app must act on `Status`, not `Type`
+  - an app that re-reads every payment itself can turn it off with a later `ConfigureWebhooks`
+- An event the app already has is answered **409**. Every other accepted webhook is answered 200.
 
 ## Redirect back to the merchant
 The browser comes back to `merchantRedirect` with `paymentStatus`, `cardDataToken`, `maskedCard`, `merchantOrderId`, `orderId`, `cardBrand`, `orderReference`, `transactionId`, `amount`, `currency`, `mode` and `signature`.
@@ -137,6 +163,7 @@ The signature is **HMAC-SHA256 (lowercase hex) with the Payment API Key**, built
 - `paymentStatus` was seen as `SUCCESS`, `FAILED` (while the webhook says `FAILURE`) and `AUTHORIZED`.
 - `amount` is a major-unit decimal string, without trailing zeros (`50`, `75.5`).
 - **The redirect is informational and is not guaranteed.** A wallet payment succeeded (webhook and inquiry agree), but the payment page then failed and never redirected. Only a verified webhook or an inquiry may move an order.
+- PayGate's return parser reports `Valid` only when the signature matches and `merchantOrderId` is present. `IndicatedStatus` is set only for a valid redirect. Parameters outside the list, such as the app's own `?ref=`, are not signed and are ignored.
 
 ## Test cards
 These come from the docs; the expiry date picks the outcome.
