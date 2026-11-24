@@ -6,7 +6,7 @@ PayGate is a library, not a service:
 - **Your application keeps ownership** of its database, payment records, orders, invoices, subscriptions, credentials and business rules.
 - There is no central payment database and nothing extra to run.
 
-> **Status: pre-release.** `PayGate.Abstractions`, `PayGate` and `PayGate.Testing` have their first API, which may still change before 1.0. `PayGate.AspNetCore` and `PayGate.Kashier` have no API yet.
+> **Status: pre-release.** All five packages have an API, which may still change before 1.0. `PayGate.Kashier` covers payments, lookups, refunds, voids, webhooks and redirects; Kashier payouts come later. See the [changelog](CHANGELOG.md).
 
 ## Packages
 
@@ -15,7 +15,7 @@ PayGate is a library, not a service:
 | `PayGate.Abstractions` | Contracts and models only (no DI or HTTP dependencies) |
 | `PayGate` | Core: DI builder, gateway resolution, HTTP pipeline, crypto and formatting helpers, webhook processing |
 | `PayGate.AspNetCore` | Webhook endpoints for minimal APIs and MVC controllers |
-| `PayGate.Kashier` | Kashier provider, including Kashier payouts |
+| `PayGate.Kashier` | Kashier provider ([setup](docs/providers/kashier.md)); Kashier payouts come later |
 | `PayGate.Testing` | Fake gateway and signed webhook builders for application tests |
 
 Paymob, Fawry and Stripe packages follow in 1.x releases.

@@ -640,3 +640,5 @@ virtual PayGate.ProviderPaymentOptions.PrintMembers(System.Text.StringBuilder! b
 ~override PayGate.Money.Equals(object obj) -> bool
 ~override PayGate.PaymentAccount.Equals(object obj) -> bool
 ~override PayGate.PaymentProviderId.Equals(object obj) -> bool
+PayGate.PaymentCapabilities.RejectsDuplicateReference.get -> bool
+PayGate.PaymentCapabilities.RejectsDuplicateReference.init -> void

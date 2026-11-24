@@ -2,7 +2,7 @@
 
 ## PayGate.Sample.WebApi
 
-A small shop API that takes payments through PayGate. It runs on the **fake gateway** now, and moves to the Kashier sandbox by changing configuration in Phase 3. It shows the part every app has to write itself: its own tables, deduping webhooks, checking amounts, fulfilling once, refunds and reconciliation.
+A small shop API that takes payments through PayGate. It runs on the **fake gateway** by default, and on the Kashier sandbox by changing configuration. It shows the part every app has to write itself: its own tables, deduping webhooks, checking amounts, fulfilling once, refunds and reconciliation.
 
 ### Run it
 
@@ -82,7 +82,7 @@ Every status the app learns (webhook, return page, refund, reconciliation) goes 
 
 | Setting | Default | Meaning |
 |---|---|---|
-| `Payments:Account` | `fake` | The PayGate account checkouts use. Phase 3 adds `kashier` |
+| `Payments:Account` | `fake` | The PayGate account checkouts use: `fake` or `kashier` |
 | `Payments:PublicBaseUrl` | `http://localhost:5080/` | Base of the return and webhook URLs. Use your tunnel's address to receive real webhooks |
 | `Payments:ConfirmWithProvider` | `true` | Ask the provider about each webhook's payment before handling it |
 | `Payments:AllowedReturnUrls` | empty | Absolute addresses `next` may point to, besides local paths |
