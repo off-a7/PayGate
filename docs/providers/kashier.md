@@ -63,7 +63,9 @@ To pay in the sandbox by hand, use the test cards below.
 - HTTP/1.1 is pinned, because the test host drops HTTP/2.
 - The order search is a partial match. PayGate filters it to the exact reference.
 - A reused reference is accepted at create and fails silently in the payment page. PayGate checks first (`CheckReferenceBeforeCreate`), but use a new reference per attempt.
-- An over-refund answers 401.
+- An over-refund answers 401 (400 for a bare request without a target transaction).
+- The FEP host needs a `Content-Length`: a chunked body is never answered.
+- Every session needs `customer.reference`. PayGate falls back to the merchant reference.
 - Live FEP is limited to 1000 requests a minute per IP (docs, not tested).
 
 The rules below were seen in Kashier's **test** environment on **2026-11-22** and **2026-11-23**. Each one is checked against both the developer docs (developers.kashier.io, read the same day) and recorded traffic. The traffic is in [tests/fixtures/kashier](../../tests/fixtures/kashier/README.md), sanitized and re-signed with a dummy key. Where the docs and the traffic disagree, the traffic wins, and the table at the end lists the differences.
@@ -85,12 +87,14 @@ The rules below were seen in Kashier's **test** environment on **2026-11-22** an
 
 - Test and live keys only work on their own hosts.
 - Kashier's test host drops HTTP/2 connections, so PayGate pins HTTP/1.1.
+- **The FEP host never answers a chunked request body** (seen 2026-11-24). A refund sent without `Content-Length` hangs until the client times out and is not made. With a length, the same call answers in about a second. PayGate sends every body with a length.
 - **Kashier echoes secrets in responses.** The Payment API Key comes back as `apiKey` in the session-create response and as `merchantDetails.apiKey` in webhooks and order inquiries. Inquiries also return card and CVV tokens. **Never log or store a raw Kashier body.**
 
 ## Creating a payment
 `POST {api}/v3/payment/sessions` returns `_id` (the session id), `status: CREATED` and `sessionUrl`.
 
-- **`merchantRedirect` must be a public URL.** `http://localhost:…` is rejected with `400 "merchantRedirect" must be a valid URL`.
+- **`merchantRedirect` must be a public URL.** `http://localhost:…` is rejected with `400 "merchantRedirect" must be a valid URL`. A query string in it is accepted, such as `?reference=ORD-1-R1&next=%2Forders%2F1`.
+- **`customer.reference` is required** (seen 2026-11-24). Without `customer`, Kashier answers `400 "customer" is required`; with an email alone, `"customer.reference" is required`. PayGate sends the app's `Customer.Reference`, or the merchant reference when there is none.
 - `serverWebhook` can be set per request, so the dashboard needs no webhook URL.
 - `metaData` round-trips: it comes back in webhooks and inquiries, with Kashier's own keys added.
 - **A reused merchant reference is not rejected at create.** A second session for an existing `order` returns 200. The failure only appears when the customer pays: the payment page gets `400 "The order has already been paid before"` (`isPaidBefore: true`) and shows an error, while **the merchant gets no webhook and no redirect**.
