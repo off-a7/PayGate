@@ -51,7 +51,7 @@
     <!-- In-memory ASP.NET Core server for endpoint tests -->
     <PackageVersion Include="Microsoft.AspNetCore.TestHost" Version="10.0.13" />
     <!-- Runs the sample app in memory for its end-to-end tests -->
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.13" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.15" />
   </ItemGroup>
 
 </Project>
