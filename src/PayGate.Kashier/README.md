@@ -2,7 +2,7 @@
 
 Kashier provider for PayGate: hosted payment sessions, status lookup, refunds and voids, webhook and redirect verification, and Kashier payouts.
 
-> **Preview.** Payments, lookups, refunds and voids work. Webhook and redirect verification, and payouts, are being added; see the [PayGate repository](https://github.com/off-a7/PayGate) and the [Kashier notes](https://github.com/off-a7/PayGate/blob/main/docs/providers/kashier.md).
+> **Preview.** Payments, lookups, refunds, voids, webhooks and redirects work. Payouts are being added; see the [PayGate repository](https://github.com/off-a7/PayGate) and the [Kashier notes](https://github.com/off-a7/PayGate/blob/main/docs/providers/kashier.md).
 
 ```csharp
 builder.Services.AddPayGate()
@@ -35,5 +35,9 @@ var session = await kashier.CreatePaymentAsync(new CreatePaymentRequest
 ```
 
 Kashier refuses `localhost` return URLs, so use a tunnel while developing.
+
+Webhooks come in through `PayGate.AspNetCore` (`app.MapPayGateWebhooks()`), and reach the app's `IPaymentEventHandler` only after their signature holds. Kashier doesn't sign a webhook's event name, so `AddKashier` turns `ConfirmWithProvider` on. Each event's status is then read back from Kashier before the handler runs, so **act on `paymentEvent.Status`**, not on `Type`.
+
+The customer's return is informational. `IPayGateReturnCallbacks.ParseAsync` checks its signature and gives the status it claims, which is enough to choose a "thank you" or "try again" page. Fulfil only from webhooks or lookups.
 
 Requires .NET 10 (`net10.0`).
